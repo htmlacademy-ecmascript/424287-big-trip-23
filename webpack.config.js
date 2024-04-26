@@ -1,6 +1,6 @@
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
-// const HtmlPlugin = require('html-webpack-plugin');
+const HtmlPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './src/main.js', // Точка входа
@@ -36,11 +36,7 @@ module.exports = {
             presets: ['@babel/preset-env']
           },
         },
-      },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
-      },
+      }
     ],
   },
 };
