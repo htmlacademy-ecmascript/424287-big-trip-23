@@ -7,9 +7,9 @@ import {RenderPosition, render} from '../render.js';
 
 export default class GeneralPresenter {
   eventListComponent = new EventListView();
-  constructor() {
-    this.tripControlsFilters = document.querySelector('.trip-controls__filters');
-    this.tripEvents = document.querySelector('.trip-events');
+  constructor({tripControlsFilters,tripEvents}) {
+    this.tripControlsFilters = tripControlsFilters;
+    this.tripEvents = tripEvents;
 
   }
 
