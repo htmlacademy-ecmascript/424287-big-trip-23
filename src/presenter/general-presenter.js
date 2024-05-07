@@ -7,19 +7,23 @@ import {RenderPosition, render} from '../render.js';
 
 export default class GeneralPresenter {
   eventListComponent = new EventListView();
-  constructor({tripControlsFilters,tripEvents}) {
+  constructor({tripControlsFilters,tripEvents,pointModel}) {
     this.tripControlsFilters = tripControlsFilters;
     this.tripEvents = tripEvents;
-
+    this.pointModel = pointModel;
   }
 
   init() {
+    this.boardPoints = [...this.pointModel.getEvents()];
+    this.destination = this.pointModel.getDestination();
+    console.log(this.destination);
+
     render(new FiltersView(),this.tripControlsFilters,RenderPosition.BEFOREEND);
     render(new SortView(),this.tripEvents);
     render(this.eventListComponent,this.tripEvents);
     render(new EditingForm(),this.eventListComponent.getElement());
-    for(let i = 0; i < 3; i++) {
-      render(new WayPoint(),this.eventListComponent.getElement());
+    for(let i = 0; i < this.boardPoints.length; i++) {
+      render(new WayPoint({event: this.boardPoints[i],destinations:this.destination[i]}),this.eventListComponent.getElement());
     }
   }
 }

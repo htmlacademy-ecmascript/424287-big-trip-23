@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-dayjs.extend(duration);
+const date1 = dayjs('2019-07-11T12:22:13.375Z');
+date1.diff('2019-07-11T11:22:13.375Z', 'minute');
 
 
 const DAY_FORMAT = 'MMM D';
