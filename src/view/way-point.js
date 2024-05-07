@@ -21,7 +21,7 @@ const createWayPointTemplate = (event,destinations) => {
                     &mdash;
                     <time class="event__end-time" datetime="${dateTo}">${timeEnd}</time>
                   </p>
-                  <p class="event__duration">${tripTime}M</p>
+                  <p class="event__duration">M</p>
                 </div>
                 <p class="event__price">
                   &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
