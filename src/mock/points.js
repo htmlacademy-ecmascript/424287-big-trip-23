@@ -1,42 +1,38 @@
-import {KIND_OF_POINTS} from '../const.js';
-import { getRandomArrayElement } from '../util.js';
 export const destinationInformation = [
   {
-    'id': 'f4b62099-293f-4c3d-a702-94eec4a2808c',
-    'basePrice': 1100,
-    'dateFrom': '2019-07-10T22:55:56.845Z',
-    'dateTo': '2019-07-11T11:22:13.375Z',
-    'destination': 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',
-    'isFavorite': false,
-    'offers': [
-      'b4c3e4e6-9053-42ce-b747-e281314baa31'
+    id: 1,
+    basePrice: 1100,
+    dateFrom: '2023-03-11T16:45:56.845Z',
+    dateTo: '2023-03-11T17:22:13.375Z',
+    destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',
+    isFavorite: false,
+    offers: [
+      '4c4eeb46-e746-4e7a-b69d-f72f4e1759e7'
     ],
-    'type': getRandomArrayElement(KIND_OF_POINTS)
+    type: 'taxi'
   },
   {
-    'id': 'f4b62099-293f-4c3d-a702-94eec4a2808c',
-    'basePrice': 1000,
-    'dateFrom': '2019-07-10T22:55:56.845Z',
-    'dateTo': '2019-07-11T11:22:13.375Z',
-    'destination': 'bfa5cb75-a1fe-4b77-a83c-0e528e910e04',
-    'isFavorite': true,
-    'offers': [
-      'b4c3e4e6-9053-42ce-b747-e281314baa31'
+    id: 2,
+    basePrice: 1120,
+    dateFrom: '2023-04-10T11:55:56.845Z',
+    dateTo: '2023-04-12T12:22:13.375Z',
+    destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',
+    isFavorite: true,
+    offers: [
+      ' 24968829-a4b8-4691-8915-a39348ec1e9c'
     ],
-    'type': getRandomArrayElement(KIND_OF_POINTS)
+    type: 'drive'
   },
   {
-    'id': 'f4b62099-293f-4c3d-a702-94eec4a2808c',
-    'basePrice': 1200,
-    'dateFrom': '2019-07-10T22:55:56.845Z',
-    'dateTo': '2019-07-11T11:22:13.375Z',
-    'destination': 'bfa5cb75-a1fe-4b77-a83c-0e528e910e06',
-    'isFavorite': false,
-    'type': getRandomArrayElement(KIND_OF_POINTS)
+    id: 3,
+    basePrice: 1130,
+    dateFrom: '2023-05-11T10:55:56.845Z',
+    dateTo: '2023-05-11T11:22:13.375Z',
+    destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e06',
+    isFavorite: false,
+    offers: [
+      '9601c223-a752-40f4-a5e8-b36d83727f23','48746fde-dad6-4562-a284-ab96e80186da'
+    ],
+    type: 'flight'
   }
 ];
-const getRandomTask = () =>
-  getRandomArrayElement(destinationInformation);
-
-
-export {getRandomTask};
