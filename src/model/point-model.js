@@ -1,17 +1,30 @@
-import {getRandomCity} from '../mock/cities.js';
-import {getRandomTask} from '../mock/points.js';
+import {destinations} from '../mock/cities.js';
+import {destinationInformation} from '../mock/points.js';
+import { offers } from '../mock/offers.js';
 
-const TASK_COUNT = 3;
 
 export default class PointModel {
-  tasks = Array.from({length: TASK_COUNT}, getRandomTask);
-  destinations = Array.from({length: TASK_COUNT},getRandomCity);
-
-  getEvents() {
-    return this.tasks;
+  constructor() {
+    this.events = [];
+    this.destinations = [];
+    this.offers = [];
   }
 
-  getDestination() {
+  init() {
+    this.events = destinationInformation;
+    this.destinations = destinations;
+    this.offers = offers;
+  }
+
+  getEvents() {
+    return this.events;
+  }
+
+  getDestinations() {
     return this.destinations;
+  }
+
+  getOffers() {
+    return this.offers;
   }
 }
