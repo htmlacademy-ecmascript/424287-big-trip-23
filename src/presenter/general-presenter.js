@@ -4,7 +4,6 @@ import WayPoint from '../view/way-point.js';
 import EditingForm from '../view/editing-form.js';
 import EventListView from '../view/event-list-view.js';
 import {RenderPosition, render} from '../render.js';
-
 export default class GeneralPresenter {
   eventListComponent = new EventListView();
   constructor({tripControlsFilters,tripEvents,pointModel}) {
@@ -14,16 +13,17 @@ export default class GeneralPresenter {
   }
 
   init() {
-    this.boardPoints = [...this.pointModel.getEvents()];
-    this.destination = this.pointModel.getDestination();
-    console.log(this.destination);
-
+    const events = [...this.pointModel.getEvents()];
+    const destinations = [...this.pointModel.getDestinations()];
+    const offers = [...this.pointModel.getOffers()];
     render(new FiltersView(),this.tripControlsFilters,RenderPosition.BEFOREEND);
     render(new SortView(),this.tripEvents);
     render(this.eventListComponent,this.tripEvents);
-    render(new EditingForm(),this.eventListComponent.getElement());
-    for(let i = 0; i < this.boardPoints.length; i++) {
-      render(new WayPoint({event: this.boardPoints[i],destinations:this.destination[i]}),this.eventListComponent.getElement());
-    }
+    render(new EditingForm({destinations, offers}),this.eventListComponent.getElement());
+    render(new EditingForm({event,destinations, offers}),this.eventListComponent.getElement());
+    events.forEach((event) => {
+      render(new WayPoint({event,destinations, offers}),this.eventListComponent.getElement());
+    });
   }
 }
+
