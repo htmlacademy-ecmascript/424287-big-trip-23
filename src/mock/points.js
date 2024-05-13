@@ -1,4 +1,4 @@
-export const destinationInformation = [
+export const events = [
   {
     id: 1,
     basePrice: 1100,
@@ -9,7 +9,7 @@ export const destinationInformation = [
     offers: [
       '4c4eeb46-e746-4e7a-b69d-f72f4e1759e7'
     ],
-    type: 'taxi'
+    type: 'Taxi'
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ export const destinationInformation = [
     offers: [
       ' 24968829-a4b8-4691-8915-a39348ec1e9c'
     ],
-    type: 'drive'
+    type: 'Drive'
   },
   {
     id: 3,
@@ -33,6 +33,6 @@ export const destinationInformation = [
     offers: [
       '9601c223-a752-40f4-a5e8-b36d83727f23','48746fde-dad6-4562-a284-ab96e80186da'
     ],
-    type: 'flight'
+    type: 'Flight'
   }
 ];

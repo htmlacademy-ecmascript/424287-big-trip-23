@@ -7,7 +7,7 @@ const DESCRIPTION = ['Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
   'Sequi, eius cum nihil sed placeat ut pariatur quam iure consectetur consequuntur delectus deleniti quis deserunt praesentium saepe obcaecati itaque odit ullam! Illum ex dolorum voluptatibus a, esse perspiciatis rerum?'];
 const CITIES = ['London','Paris','Rome','Berlin','Madrid'];
 const getDefaultEvent = () => ({
-  id: '100',
+  id: '',
   basePrice: 0,
   dateFrom: new Date().toString(),
   dateTo: new Date().toString(),

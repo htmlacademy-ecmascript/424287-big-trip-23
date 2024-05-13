@@ -1,9 +1,9 @@
 import {destinations} from '../mock/cities.js';
-import {destinationInformation} from '../mock/points.js';
+import {events} from '../mock/points.js';
 import { offers } from '../mock/offers.js';
 
 
-export default class PointModel {
+export default class PointsModel {
   constructor() {
     this.events = [];
     this.destinations = [];
@@ -11,7 +11,7 @@ export default class PointModel {
   }
 
   init() {
-    this.events = destinationInformation;
+    this.events = events;
     this.destinations = destinations;
     this.offers = offers;
   }

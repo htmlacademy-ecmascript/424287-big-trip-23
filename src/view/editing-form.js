@@ -32,7 +32,7 @@ ${KIND_OF_POINTS.map((pointType) => (`<div class="event__type-item">
 
   <div class="event__field-group  event__field-group--destination">
     <label class="event__label  event__type-output" for="event-destination-1">
-      Flight
+    ${type}
     </label>
     <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name || ''}" list="destination-list-1">
     <datalist id="destination-list-1">
@@ -75,7 +75,7 @@ ${typeOffers.map((typeOffer) => ` <div class="event__available-offers">
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${typeOffer.price}</span>
   </label>
-</div>`)}
+</div>`).join('')}
 
   </section>` : ''}
 ${currentDestination ? (`<section class="event__section  event__section--destination">
@@ -84,7 +84,7 @@ ${currentDestination ? (`<section class="event__section  event__section--destina
 
 <div class="event__photos-container">
   <div class="event__photos-tape">
-  ${pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="Event photo"></img>`)}
+  ${pictures.map((picture) => `<img class="event__photo" src="${picture.src}" alt="Event photo"></img>`).join('')}
   </div>
 </div>
 </section>

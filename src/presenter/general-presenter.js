@@ -19,7 +19,7 @@ export default class GeneralPresenter {
     render(new FiltersView(),this.tripControlsFilters,RenderPosition.BEFOREEND);
     render(new SortView(),this.tripEvents);
     render(this.eventListComponent,this.tripEvents);
-    render(new EditingForm({destinations, offers}),this.eventListComponent.getElement());
+    // render(new EditingForm({destinations, offers}),this.eventListComponent.getElement());
     render(new EditingForm({event,destinations, offers}),this.eventListComponent.getElement());
     events.forEach((event) => {
       render(new WayPoint({event,destinations, offers}),this.eventListComponent.getElement());

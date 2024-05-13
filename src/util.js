@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 
 const DAY_FORMAT = 'MMM D';
-const TIME_FORMAT = 'HH:mm';
+export const TIME_FORMAT = 'HH:mm';
 const MACHINE_FORMAT = 'YYYY-MM-DD';
 const FORM_FORMAT = 'DD/MM/YY HH:mm';
 const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];

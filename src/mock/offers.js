@@ -1,5 +1,5 @@
 export const offers = [{
-  type: 'taxi',
+  type: 'Taxi',
   offers: [
     {
       id: '07ca56e9-f70b-4a8b-8239-ebe1a8faef51',
@@ -14,7 +14,7 @@ export const offers = [{
   ],
 },
 {
-  type: 'bus',
+  type: 'Bus',
   offers: [
     {
       id: '304b839a-b9cd-41b8-9aa2-96f9ab4ca41f',
@@ -24,7 +24,7 @@ export const offers = [{
   ],
 },
 {
-  type: 'train',
+  type: 'Train',
   offers: [
     {
       id: '3221bb97-0f8a-4340-97b2-26f7ebd68388',
@@ -34,7 +34,7 @@ export const offers = [{
   ],
 },
 {
-  type: 'flight',
+  type: 'Flight',
   offers: [
     {
       id: '9601c223-a752-40f4-a5e8-b36d83727f23',
@@ -49,7 +49,7 @@ export const offers = [{
   ],
 },
 {
-  type: 'check-in',
+  type: 'Check-in',
   offers: [
     {
       id: 'c6a1285d-bd27-46a3-8a33-9e4c5102b58b',
@@ -69,11 +69,11 @@ export const offers = [{
   ],
 },
 {
-  type: 'sightseeing',
+  type: 'Sightseeing',
   offers: [],
 },
 {
-  type: 'ship',
+  type: 'Ship',
   offers: [
     {
       id: '82981ccb-c202-4294-b289-eaa1dd2d3e4f',
@@ -88,7 +88,7 @@ export const offers = [{
   ],
 },
 {
-  type: 'drive',
+  type: 'Drive',
   offers: [
     {
       id: '24968829-a4b8-4691-8915-a39348ec1e9c',
@@ -98,7 +98,7 @@ export const offers = [{
   ],
 },
 {
-  type: 'restaurant',
+  type: 'Restaurant',
   offers: [
     {
       id: '3e70d7a0-c554-49b2-8d13-18a03624a0be',

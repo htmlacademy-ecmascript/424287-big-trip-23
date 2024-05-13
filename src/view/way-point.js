@@ -1,6 +1,5 @@
 import { createElement } from '../render';
 import dayjs from 'dayjs';
-
 import { humanizeDueDate,humanizeDueTime, machineDueFormat} from '../util';
 const createWayPointTemplate = (event,destinations,offers) => {
   const {type,dateFrom,dateTo,basePrice,isFavorite} = event;
@@ -10,13 +9,9 @@ const createWayPointTemplate = (event,destinations,offers) => {
   const date = humanizeDueDate(dateFrom);
   const timeStart = humanizeDueTime(dateFrom);
   const timeEnd = humanizeDueTime(dateTo);
-  const date1 = dayjs(dateTo);
-  const tripDuration = date1.diff(dateFrom, 'm');
+  const dateEnd = dayjs(dateTo);
+  const tripDuration = dateEnd.diff(dateFrom, 'm');
 
-  //   var a = dayjs(timeEnd)
-
-  // dayjs(timeStart).to(a)
-  //   console.log(dayjs(timeStart).to(a));
   return `<li class="trip-events__item">
   <div class="event">
                 <time class="event__date" datetime="${machineDueFormat(date)}">${date}</time>
