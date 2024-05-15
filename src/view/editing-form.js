@@ -1,6 +1,6 @@
-import { createElement } from '../render';
 import { KIND_OF_POINTS, getDefaultEvent } from '../const';
 import { humanizeDueTimeForForm } from '../util.js';
+import AbstractView from '../framework/view/abstract-view';
 const editEventFormTemplate = (event,destinations,offers) => {
   const {type,dateFrom,dateTo,basePrice} = event;
   const currentDestination = destinations.find((destination) => destination.id === event.destination);
@@ -93,26 +93,36 @@ ${currentDestination ? (`<section class="event__section  event__section--destina
 </form>
 </li>`;
 };
-export default class EditingForm {
-  constructor({event = getDefaultEvent(), destinations,offers}) {
-    this.event = event;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class EditingForm extends AbstractView {
+  #event = null;
+  #destinations = null;
+  #offers = null;
+  #handleClick = null;
+  #handleSubmit = null;
+  constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick}) {
+    super();
+    this.#event = event;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleSubmit = onSubmit;
+    this.#handleClick = onClick;
+    this.element.addEventListener('submit', this.#submitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
   }
 
-  getTemplate() {
-    return editEventFormTemplate(this.event,this.destinations, this.offers);
+  #submitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleSubmit();
+  };
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
+
+  get template() {
+    return editEventFormTemplate(this.#event,this.#destinations, this.#offers);
   }
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
 
 }

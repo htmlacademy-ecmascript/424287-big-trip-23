@@ -1,4 +1,4 @@
-import { createElement } from '../render';
+import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
 import { humanizeDueDate,humanizeDueTime, machineDueFormat} from '../util';
 const createWayPointTemplate = (event,destinations,offers) => {
@@ -50,26 +50,27 @@ const createWayPointTemplate = (event,destinations,offers) => {
               </div>
 </li>`;
 };
-export default class WayPoint {
-  constructor({event, destinations,offers}) {
-    this.event = event;
-    this.destinations = destinations;
-    this.offers = offers;
+export default class WayPoint extends AbstractView {
+  #event = null;
+  #destinations = null;
+  #offers = null;
+  #handleClick = null;
+  constructor({event, destinations,offers,onClick}) {
+    super();
+    this.#event = event;
+    this.#destinations = destinations;
+    this.#offers = offers;
+    this.#handleClick = onClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
   }
 
-  getTemplate() {
-    return createWayPointTemplate(this.event,this.destinations, this.offers);
-  }
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleClick();
+  };
 
-  getElement() {
-    if(!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createWayPointTemplate(this.#event,this.#destinations, this.#offers);
   }
 
 }
