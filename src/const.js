@@ -1,4 +1,4 @@
-const KIND_OF_POINTS = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive','Flight','Check-in', 'Sightseeing', 'Restaurant'];
+const KIND_OF_POINTS = ['taxi', 'bus', 'train', 'ship', 'drive','flight','check-in', 'sightseeing', 'restaurant'];
 
 const DESCRIPTION = ['Lorem ipsum dolor sit, amet consectetur adipisicing elit. Amet numquam suscipit expedita eos incidunt quibusdam, eius temporibus. Fugit veritatis suscipit eius voluptatem voluptates rerum quidem fugiat harum ad, optio itaque?',
   'Facere voluptas ipsum dolorum accusamus cum, id facilis, saepe eaque qui praesentium excepturi commodi! Perspiciatis a minus quidem iusto corporis., Est eius omnis suscipit, ad at quo officia iure rerum.',
