@@ -1,6 +1,7 @@
 import { KIND_OF_POINTS, getDefaultEvent } from '../const';
 import { humanizeDueTimeForForm } from '../util.js';
 import AbstractView from '../framework/view/abstract-view';
+
 const editEventFormTemplate = (event,destinations,offers) => {
   const {type,dateFrom,dateTo,basePrice} = event;
   const currentDestination = destinations.find((destination) => destination.id === event.destination);
@@ -97,27 +98,27 @@ export default class EditingForm extends AbstractView {
   #event = null;
   #destinations = null;
   #offers = null;
-  #handleClick = null;
-  #handleSubmit = null;
+  #onClick = null;
+  #onSubmit = null;
   constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick}) {
     super();
     this.#event = event;
     this.#destinations = destinations;
     this.#offers = offers;
-    this.#handleSubmit = onSubmit;
-    this.#handleClick = onClick;
-    this.element.addEventListener('submit', this.#submitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+    this.#onSubmit = onSubmit;
+    this.#onClick = onClick;
+    this.element.addEventListener('submit', this.#onSubmitClick);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
   }
 
-  #submitHandler = (evt) => {
+  #onSubmitClick = (evt) => {
     evt.preventDefault();
-    this.#handleSubmit();
+    this.#onSubmit();
   };
 
-  #clickHandler = (evt) => {
+  #onCloseBtnClick = (evt) => {
     evt.preventDefault();
-    this.#handleClick();
+    this.#onClick();
   };
 
   get template() {

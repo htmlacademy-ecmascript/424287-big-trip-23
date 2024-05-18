@@ -54,19 +54,19 @@ export default class WayPoint extends AbstractView {
   #event = null;
   #destinations = null;
   #offers = null;
-  #handleClick = null;
+  #onClick = null;
   constructor({event, destinations,offers,onClick}) {
     super();
     this.#event = event;
     this.#destinations = destinations;
     this.#offers = offers;
-    this.#handleClick = onClick;
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#clickHandler);
+    this.#onClick = onClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onEditBtnClick);
   }
 
-  #clickHandler = (evt) => {
+  #onEditBtnClick = (evt) => {
     evt.preventDefault();
-    this.#handleClick();
+    this.#onClick();
   };
 
   get template() {

@@ -23,9 +23,6 @@ export default class GeneralPresenter {
     render(new FiltersView(),this.#tripControlsFilters,RenderPosition.BEFOREEND);
     render(new SortView(),this.#tripEvents);
     this.#renderTripEvents(this.#pointModel);
-    // this.#renderTripEvent();
-    // render(new EditingForm({event,destinations, offers}),this.#eventListComponent.element);
-    // render(tripEventView,this.#eventListComponent.element);
 
   }
 
@@ -48,15 +45,16 @@ export default class GeneralPresenter {
     const tripEventView = new WayPoint({event,destinations, offers, onClick: onEditBtnClick});
 
     const eventEditView = new EditingForm({event,destinations, offers, onSubmit: onCloseBtnClick, onClick:onCloseBtnClick});
+
     function switchToEditMode() {
       replace(eventEditView,tripEventView);
       document.addEventListener('keydown', onDocumentKeyDown);
-
     }
-    function switchToViewMode() {
 
+    function switchToViewMode() {
       replace(tripEventView,eventEditView);
     }
+
     render(tripEventView, this.#eventListComponent.element);
 
   }
