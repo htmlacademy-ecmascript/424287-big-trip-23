@@ -1,10 +1,11 @@
 import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
-import WayPoint from '../view/way-point.js';
-import EditingForm from '../view/editing-form.js';
+// import WayPoint from '../view/way-point.js';
+// import EditingForm from '../view/editing-form.js';
 import EventListView from '../view/event-list-view.js';
 import {RenderPosition} from '../render.js';
-import { render, replace} from '../framework/render.js';
+import { render } from '../framework/render.js';
+import EventPresenter from './event-presenter.js';
 export default class GeneralPresenter {
   #tripControlsFilters = null;
   #tripEvents = null;
@@ -34,29 +35,9 @@ export default class GeneralPresenter {
   #renderTripEvent(event) {
     const destinations = [...this.#pointModel.destinations];
     const offers = [...this.#pointModel.offers];
-    const onEditBtnClick = () => switchToEditMode();
-    const onCloseBtnClick = () => switchToViewMode();
-    const onDocumentKeyDown = (evt) => {
-      if(evt.key === 'Escape') {
-        evt.preventDefault();
-        switchToViewMode();
-      }
-    };
-    const tripEventView = new WayPoint({event,destinations, offers, onClick: onEditBtnClick});
+    const eventPresenter = new EventPresenter({eventListContainer: this.#eventListComponent.element,event, destinations,offers});
 
-    const eventEditView = new EditingForm({event,destinations, offers, onSubmit: onCloseBtnClick, onClick:onCloseBtnClick});
-
-    function switchToEditMode() {
-      replace(eventEditView,tripEventView);
-      document.addEventListener('keydown', onDocumentKeyDown);
-    }
-
-    function switchToViewMode() {
-      replace(tripEventView,eventEditView);
-    }
-
-    render(tripEventView, this.#eventListComponent.element);
-
+    eventPresenter.init();
   }
 }
 
