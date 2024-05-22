@@ -10,6 +10,6 @@ const humanizeDueTime = (dueDate) => dueDate ? dayjs(dueDate).format(TIME_FORMAT
 const machineDueFormat = (dueDate) => dueDate ? dayjs(dueDate).format(MACHINE_FORMAT) : '';
 const humanizeDueTimeForForm = (dueDate) => dueDate ? dayjs(dueDate).format(FORM_FORMAT) : '';
 
-const updateData = (items, update) => items.map((item) => item.id === update.id ? update : item);
-const updateItem = (item, prop) => ({...item, ...prop});
-export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateData,updateItem};
+const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
+// const updateItem = (item, prop) => ({...item, ...prop});
+export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem};
