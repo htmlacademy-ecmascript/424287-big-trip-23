@@ -16,5 +16,11 @@ const getDefaultEvent = () => ({
   offers: [],
   type: KIND_OF_POINTS[0]
 });
+
+export const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDIT: 'EDIT'
+};
+
 export {KIND_OF_POINTS,DESCRIPTION,CITIES,getDefaultEvent};
 //dayjs(taskB.dueDate).diff(dayjs(taskA.dueDate))
