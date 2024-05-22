@@ -1,48 +1,40 @@
 import WayPoint from '../view/way-point.js';
 import EditingForm from '../view/editing-form.js';
 import { render, replace} from '../framework/render.js';
-import { updateItem } from '../util.js';
 import { Mode } from '../const.js';
 export default class EventPresenter {
   #event = null;
   #destinations = [];
   #offers = [];
   #eventListContainer = null;
-  #handlePointUpdate = null;
   #tripEventView = null;
   #eventEditView = null;
   #mode = Mode.DEFAULT;
-  constructor({eventListContainer, destinations,offers,onPointUpdate}) {
+  #onDataChange = null;
+  #handleEditStart = null;
+
+  constructor({eventListContainer, destinations,offers,onDataChange, onEditStart}) {
     this.#destinations = destinations;
     this.#offers = offers;
     this.#eventListContainer = eventListContainer;
-    this.#handlePointUpdate = onPointUpdate;
+    this.#onDataChange = onDataChange;
+    this.#handleEditStart = onEditStart;
   }
 
   init(event) {
     this.#event = event;
-    this.#renderTripEvent(this.#event, this.#destinations, this.#offers);
-  }
 
-  resetView() {
-    if(this.#mode === Mode.EDIT) {
-      this.#switchToViewMode();
-    }
-  }
-
-  #renderTripEvent(event, destinations, offers) {
     const prevEventView = this.#tripEventView;
 
-    this.#tripEventView = new WayPoint({event,destinations, offers, onClick: () => {
+    this.#tripEventView = new WayPoint({event,destinations:this.#destinations, offers:this.#offers, onClick: () => {
       this.#switchToEditMode();
-    }, onFavouriteBtnClick: () => {
-      const updatePoint = updateItem(event, {isFavorite: !event.isFavorite});
-      this.#handlePointUpdate(updatePoint);
-    }});
+    }, onBtnClick: this.#onFavoriteBtnClick});
 
-    this.#eventEditView = new EditingForm({event,destinations, offers, onSubmit: () => {
+    this.#eventEditView = new EditingForm({event,destinations:this.#destinations, offers:this.#offers, onSubmit: () => {
       this.#switchToViewMode();
-    }, onClick:this.#switchToViewMode()});
+    }, onClick:() => {
+      this.#switchToViewMode();
+    }});
 
 
     if(prevEventView === null) {
@@ -52,9 +44,18 @@ export default class EventPresenter {
 
     replace(this.#tripEventView,prevEventView);
 
+
   }
 
+  resetView() {
+    if(this.#mode === Mode.EDIT) {
+      this.#switchToViewMode();
+    }
+  }
+
+
   #switchToEditMode() {
+    this.#handleEditStart();
     replace(this.#eventEditView,this.#tripEventView);
     document.addEventListener('keydown', this.#onDocumentKeyDown);
     this.#mode = Mode.EDIT;
@@ -72,4 +73,7 @@ export default class EventPresenter {
     }
   };
 
+  #onFavoriteBtnClick = () => {
+    this.#onDataChange({...this.#event, isFavorite: !this.#event.isFavorite});
+  };
 }
