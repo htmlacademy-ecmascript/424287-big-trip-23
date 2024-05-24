@@ -76,10 +76,6 @@ export default class WayPoint extends AbstractView {
     evt.preventDefault();
     this.#onBtnClick();
   };
-  // #onFavoriteButtonClick = (evt) => {
-  //   evt.preventDefault();
-  //   this.#onSelect();
-  // };
 
   get template() {
     return createWayPointTemplate(this.#event,this.#destinations, this.#offers);

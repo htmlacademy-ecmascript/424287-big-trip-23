@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-
+import { SortType } from './const';
 const DAY_FORMAT = 'MMM D';
 export const TIME_FORMAT = 'HH:mm';
 const MACHINE_FORMAT = 'YYYY-MM-DD';
@@ -12,4 +12,13 @@ const humanizeDueTimeForForm = (dueDate) => dueDate ? dayjs(dueDate).format(FORM
 
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 // const updateItem = (item, prop) => ({...item, ...prop});
-export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem};
+const getTimeDifference = ({dateFrom,dateTo}) => (new Date(dateTo)).getTime() - (new Date(dateFrom)).getTime();
+// isAfter
+const sortEventsBy = {
+  [SortType.DAY]: (events) => [...events],
+  [SortType.TIME]: (events) => [...events].sort((a,b) => getTimeDifference(b) - getTimeDifference(a)),
+  [SortType.PRICE]: (events) => [...events].sort((a,b) => b.basePrice - a.basePrice),
+
+};
+const sortEvents = (events, sortType) => sortEventsBy[sortType](events);
+export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents};

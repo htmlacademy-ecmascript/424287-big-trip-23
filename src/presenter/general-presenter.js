@@ -2,10 +2,10 @@ import FiltersView from '../view/filters-view.js';
 import SortView from '../view/sort-view.js';
 import EventListView from '../view/event-list-view.js';
 import {RenderPosition} from '../render.js';
-import { render } from '../framework/render.js';
+import { render, remove } from '../framework/render.js';
 import EventPresenter from './event-presenter.js';
-import { updateItem } from '../util.js';
-
+import { updateItem, sortEvents } from '../util.js';
+import { SortType } from '../const.js';
 export default class GeneralPresenter {
   #tripControlsFilters = null;
   #tripEvents = null;
@@ -14,6 +14,9 @@ export default class GeneralPresenter {
   #eventListComponent = null;
   #eventPresenters = new Map();
   #events = null;
+  #sortView = null;
+  #activeSortType = SortType.DAY;
+  #filterView = null;
   constructor({tripControlsFilters,tripEvents,pointModel}) {
     this.#tripControlsFilters = tripControlsFilters;
     this.#tripEvents = tripEvents;
@@ -22,10 +25,25 @@ export default class GeneralPresenter {
   }
 
   init() {
-    this.#events = [...this.#pointModel.events];
-    render(new FiltersView(),this.#tripControlsFilters,RenderPosition.BEFOREEND);
-    render(new SortView(),this.#tripEvents);
+    this.#events = sortEvents(this.#pointModel.events,this.#activeSortType);
+    this.#clearTripEvents();
+    this.#filterView = new FiltersView();
+    render(this.#filterView,this.#tripControlsFilters,RenderPosition.BEFOREEND);
+    this.#sortView = new SortView({currentSortType:this.#activeSortType, onSortChange:this.#handleSortChange});
+    render(this.#sortView,this.#tripEvents);
     this.#renderTripEvents(this.#pointModel);
+
+  }
+
+  #clearTripEvents() {
+    if(!this.#events.length) {
+      console.log('f');
+    }
+    this.#eventPresenters.forEach((presenter) => presenter.destroy());
+    this.#eventPresenters.clear();
+    remove(this.#sortView);
+    remove(this.#eventListComponent);
+    remove(this.#filterView);
 
   }
 
@@ -52,5 +70,11 @@ export default class GeneralPresenter {
   #resetAllViews = () => {
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
+
+  #handleSortChange = (nextSortType) => {
+    this.#activeSortType = nextSortType;
+    this.init();
+  };
+
 }
 
