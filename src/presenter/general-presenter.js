@@ -49,6 +49,7 @@ export default class GeneralPresenter {
 
   #renderTripEvents({events}) {
     render(this.#eventListComponent,this.#tripEvents);
+    events = this.#events;
     events.forEach((event) => this.#renderTripEvent(event));
   }
 
