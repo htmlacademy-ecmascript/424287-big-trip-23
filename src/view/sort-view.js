@@ -1,5 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
 import { SortType } from '../const';
+
 const DISABLED_SORT_TYPES = [SortType.EVENT, SortType.OFFERS];
 const PREFIX_SORT = 'sort-';
 const createSortTemplate = (currentSortType) => (

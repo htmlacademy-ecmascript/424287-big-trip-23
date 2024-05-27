@@ -100,6 +100,7 @@ export default class EditingForm extends AbstractView {
   #offers = null;
   #onClick = null;
   #onSubmit = null;
+
   constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick}) {
     super();
     this.#event = event;

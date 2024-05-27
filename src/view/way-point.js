@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
 import { humanizeDueDate,humanizeDueTime, machineDueFormat} from '../util';
+
 const createWayPointTemplate = (event,destinations,offers) => {
   const {type,dateFrom,dateTo,basePrice,isFavorite} = event;
   const currentDestination = destinations.find((destination) => destination.id === event.destination);
@@ -56,6 +57,7 @@ export default class WayPoint extends AbstractView {
   #offers = null;
   #onClick = null;
   #onBtnClick = null;
+
   constructor({event, destinations,offers,onClick,onBtnClick}) {
     super();
     this.#event = event;

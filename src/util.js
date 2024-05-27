@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { SortType } from './const';
+
 const DAY_FORMAT = 'MMM D';
 export const TIME_FORMAT = 'HH:mm';
 const MACHINE_FORMAT = 'YYYY-MM-DD';
@@ -16,8 +17,8 @@ const getTimeDifference = ({dateFrom,dateTo}) => (new Date(dateTo)).getTime() - 
 // isAfter
 const sortEventsBy = {
   [SortType.DAY]: (events) => [...events],
-  [SortType.TIME]: (events) => [...events].sort((a,b) => getTimeDifference(b) - getTimeDifference(a)),
-  [SortType.PRICE]: (events) => [...events].sort((a,b) => b.basePrice - a.basePrice),
+  [SortType.TIME]: (events) => [...events].sort((nextEvent, currentEvent) => getTimeDifference(currentEvent) - getTimeDifference(nextEvent)),
+  [SortType.PRICE]: (events) => [...events].sort((nextEvent, currentEvent) => currentEvent.basePrice - nextEvent.basePrice),
 
 };
 const sortEvents = (events, sortType) => sortEventsBy[sortType](events);

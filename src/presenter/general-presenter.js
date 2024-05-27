@@ -17,6 +17,7 @@ export default class GeneralPresenter {
   #sortView = null;
   #activeSortType = SortType.DAY;
   #filterView = null;
+
   constructor({tripControlsFilters,tripEvents,pointModel}) {
     this.#tripControlsFilters = tripControlsFilters;
     this.#tripEvents = tripEvents;
@@ -36,9 +37,9 @@ export default class GeneralPresenter {
   }
 
   #clearTripEvents() {
-    if(!this.#events.length) {
-      console.log('f');
-    }
+    // if(!this.#events.length) {
+    //   console.log('f');
+    // }
     this.#eventPresenters.forEach((presenter) => presenter.destroy());
     this.#eventPresenters.clear();
     remove(this.#sortView);
@@ -47,10 +48,9 @@ export default class GeneralPresenter {
 
   }
 
-  #renderTripEvents({events}) {
+  #renderTripEvents() {
     render(this.#eventListComponent,this.#tripEvents);
-    events = this.#events;
-    events.forEach((event) => this.#renderTripEvent(event));
+    this.#events.forEach((event) => this.#renderTripEvent(event));
   }
 
   #renderTripEvent(event) {
