@@ -22,5 +22,12 @@ export const Mode = {
   EDIT: 'EDIT'
 };
 
+export const SortType = {
+  DAY: 'day',
+  EVENT: 'event',
+  TIME: 'time',
+  PRICE: 'price',
+  OFFERS:'offers'
+};
 export {KIND_OF_POINTS,DESCRIPTION,CITIES,getDefaultEvent};
 //dayjs(taskB.dueDate).diff(dayjs(taskA.dueDate))

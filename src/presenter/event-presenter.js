@@ -1,6 +1,6 @@
 import WayPoint from '../view/way-point.js';
 import EditingForm from '../view/editing-form.js';
-import { render, replace} from '../framework/render.js';
+import { remove, render, replace} from '../framework/render.js';
 import { Mode } from '../const.js';
 export default class EventPresenter {
   #event = null;
@@ -47,6 +47,13 @@ export default class EventPresenter {
 
   }
 
+  destroy() {
+    remove(this.#tripEventView);
+    remove(this.#eventEditView);
+    this.#tripEventView = null;
+    this.#eventEditView = null;
+  }
+
   resetView() {
     if(this.#mode === Mode.EDIT) {
       this.#switchToViewMode();
@@ -63,6 +70,7 @@ export default class EventPresenter {
 
   #switchToViewMode() {
     replace(this.#tripEventView,this.#eventEditView);
+    document.removeEventListener('keydown', this.#onDocumentKeyDown);
     this.#mode = Mode.DEFAULT;
   }
 
