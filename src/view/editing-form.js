@@ -1,6 +1,6 @@
 import { KIND_OF_POINTS, getDefaultEvent } from '../const';
 import { humanizeDueTimeForForm } from '../util.js';
-import AbstractView from '../framework/view/abstract-view';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 const editEventFormTemplate = (event,destinations,offers) => {
   const {type,dateFrom,dateTo,basePrice} = event;
@@ -94,22 +94,24 @@ ${currentDestination ? (`<section class="event__section  event__section--destina
 </form>
 </li>`;
 };
-export default class EditingForm extends AbstractView {
+export default class EditingForm extends AbstractStatefulView {
   #event = null;
   #destinations = null;
   #offers = null;
+  #typeOffers = null;
   #onClick = null;
   #onSubmit = null;
 
   constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick}) {
     super();
-    this.#event = event;
+    this._setState(EditingForm.parseEventToState(event));
     this.#destinations = destinations;
     this.#offers = offers;
+    // this.#typeOffers = this.#getOffersByType(event.type);
     this.#onSubmit = onSubmit;
     this.#onClick = onClick;
-    this.element.addEventListener('submit', this.#onSubmitClick);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
+    this._restoreHandlers();
+
   }
 
   #onSubmitClick = (evt) => {
@@ -122,9 +124,37 @@ export default class EditingForm extends AbstractView {
     this.#onClick();
   };
 
+  #onEventTypeClick = (evt) => {
+    evt.preventDefault();
+    this.updateElement({
+      type: evt.target.value
+    });
+  };
+
+  #onEventDestinationClick = (evt) => {
+    evt.preventDefault();
+    const destination = this.#destinations.find((element) => element.name === evt.target.value);
+    this.updateElement({
+      destination: destination.id
+    });
+  };
+
   get template() {
-    return editEventFormTemplate(this.#event,this.#destinations, this.#offers);
+    return editEventFormTemplate(this._state,this.#destinations, this.#offers);
   }
 
+  _restoreHandlers() {
+    this.element.addEventListener('submit', this.#onSubmitClick);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeClick);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onEventDestinationClick);
+  }
 
+  static parseEventToState(event) {
+    return {...event};
+  }
+
+  static parseStateToEvent(state) {
+    return {...state};
+  }
 }
