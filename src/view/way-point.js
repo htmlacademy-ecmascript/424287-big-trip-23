@@ -1,5 +1,4 @@
 import AbstractView from '../framework/view/abstract-view';
-import dayjs from 'dayjs';
 import { humanizeDueDate,humanizeDueTime, machineDueFormat,getTimeDuration} from '../util';
 
 const createWayPointTemplate = (event,destinations,offers) => {
