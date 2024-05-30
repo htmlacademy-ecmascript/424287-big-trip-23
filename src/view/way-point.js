@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view';
 import dayjs from 'dayjs';
-import { humanizeDueDate,humanizeDueTime, machineDueFormat} from '../util';
+import { humanizeDueDate,humanizeDueTime, machineDueFormat,getTimeDuration} from '../util';
 
 const createWayPointTemplate = (event,destinations,offers) => {
   const {type,dateFrom,dateTo,basePrice,isFavorite} = event;
@@ -10,8 +10,7 @@ const createWayPointTemplate = (event,destinations,offers) => {
   const date = humanizeDueDate(dateFrom);
   const timeStart = humanizeDueTime(dateFrom);
   const timeEnd = humanizeDueTime(dateTo);
-  const dateEnd = dayjs(dateTo);
-  const tripDuration = dateEnd.diff(dateFrom, 'm');
+  const tripDuration = getTimeDuration(dateFrom,dateTo);
 
   return `<li class="trip-events__item">
   <div class="event">
@@ -26,7 +25,7 @@ const createWayPointTemplate = (event,destinations,offers) => {
                     &mdash;
                     <time class="event__end-time" datetime="${dateTo}">${timeEnd}</time>
                   </p>
-                  <p class="event__duration">${tripDuration}M</p>
+                  <p class="event__duration">${tripDuration}</p>
                 </div>
                 <p class="event__price">
                   &euro;&nbsp;<span class="event__price-value">${basePrice}</span>

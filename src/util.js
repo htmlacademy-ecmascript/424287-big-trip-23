@@ -12,9 +12,20 @@ const machineDueFormat = (dueDate) => dueDate ? dayjs(dueDate).format(MACHINE_FO
 const humanizeDueTimeForForm = (dueDate) => dueDate ? dayjs(dueDate).format(FORM_FORMAT) : '';
 
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
-// const updateItem = (item, prop) => ({...item, ...prop});
 const getTimeDifference = ({dateFrom,dateTo}) => (new Date(dateTo)).getTime() - (new Date(dateFrom)).getTime();
 // isAfter
+const getTimeDuration = (dateFrom, dateTo) => {
+  const minutes = dayjs(dateTo).diff(dayjs(dateFrom), 'minutes') % 60;
+  const hours = dayjs(dateTo).diff(dayjs(dateFrom), 'hours') % 24;
+  const days = dayjs(dateTo).diff(dayjs(dateFrom), 'days');
+  if (days === 0 && hours === 0){
+    return `${minutes}M`;
+  } else if (days === 0) {
+    return `${hours}H ${minutes}M`;
+  }
+  return `${days}D ${hours}H ${minutes}M`;
+};
+
 const sortEventsBy = {
   [SortType.DAY]: (events) => [...events],
   [SortType.TIME]: (events) => [...events].sort((nextEvent, currentEvent) => getTimeDifference(currentEvent) - getTimeDifference(nextEvent)),
@@ -22,4 +33,4 @@ const sortEventsBy = {
 
 };
 const sortEvents = (events, sortType) => sortEventsBy[sortType](events);
-export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents};
+export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents,getTimeDuration};
