@@ -2,6 +2,9 @@ import { KIND_OF_POINTS, getDefaultEvent } from '../const';
 import { humanizeDueTimeForForm } from '../util.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
 const editEventFormTemplate = (event,destinations,offers) => {
   const {type,dateFrom,dateTo,basePrice} = event;
   const currentDestination = destinations.find((destination) => destination.id === event.destination);
@@ -101,13 +104,15 @@ export default class EditingForm extends AbstractStatefulView {
   #typeOffers = null;
   #onClick = null;
   #onSubmit = null;
+  #datepickerStart = null;
+  #datepickerEnd = null;
 
   constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick}) {
     super();
+    this.#event = event;
     this._setState(EditingForm.parseEventToState(event));
     this.#destinations = destinations;
     this.#offers = offers;
-    // this.#typeOffers = this.#getOffersByType(event.type);
     this.#onSubmit = onSubmit;
     this.#onClick = onClick;
     this._restoreHandlers();
@@ -121,6 +126,7 @@ export default class EditingForm extends AbstractStatefulView {
 
   #onCloseBtnClick = (evt) => {
     evt.preventDefault();
+    this.reset();
     this.#onClick();
   };
 
@@ -139,6 +145,18 @@ export default class EditingForm extends AbstractStatefulView {
     });
   };
 
+  #onDateFromChangeClick = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #onDateToChangeClick = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
   get template() {
     return editEventFormTemplate(this._state,this.#destinations, this.#offers);
   }
@@ -148,6 +166,53 @@ export default class EditingForm extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onEventDestinationClick);
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+    }
+    if (this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
+  }
+
+  reset() {
+    this.updateElement(this.#event);
+  }
+
+  #setDatepickerStart() {
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('[name="event-start-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        minDate: 'today',
+        'time_24hr': true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#onDateFromChangeClick, // На событие flatpickr передаём наш колбэк
+      },
+    );
+  }
+
+  #setDatepickerEnd() {
+    this.#datepickerEnd = flatpickr(
+      this.element.querySelector('[name="event-end-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        minDate: this._state.dateFrom,
+        'time_24hr': true,
+        defaultDate: this._state.dateTo,
+        onChange: this.#onDateToChangeClick, // На событие flatpickr передаём наш колбэк
+      },
+    );
   }
 
   static parseEventToState(event) {

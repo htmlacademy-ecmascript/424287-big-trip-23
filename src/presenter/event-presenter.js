@@ -77,6 +77,7 @@ export default class EventPresenter {
   #onDocumentKeyDown = (evt) => {
     if(evt.key === 'Escape') {
       evt.preventDefault();
+      this.#eventEditView.reset();
       this.#switchToViewMode();
     }
   };
