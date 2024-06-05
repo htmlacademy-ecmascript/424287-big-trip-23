@@ -1,7 +1,7 @@
 import WayPoint from '../view/way-point.js';
 import EditingForm from '../view/editing-form.js';
 import { remove, render, replace} from '../framework/render.js';
-import { Mode } from '../const.js';
+import { Mode,UpdateType,UserAction } from '../const.js';
 export default class EventPresenter {
   #event = null;
   #destinations = [];
@@ -34,6 +34,8 @@ export default class EventPresenter {
       this.#switchToViewMode();
     }, onClick:() => {
       this.#switchToViewMode();
+    },onSave:() => {
+      this.#onSaveBtnClick();
     }});
 
 
@@ -82,7 +84,11 @@ export default class EventPresenter {
     }
   };
 
+  #onSaveBtnClick() {
+    this.#onDataChange(UserAction.UPDATE_EVENT,UpdateType.MINOR,{...this.#event});
+  }
+
   #onFavoriteBtnClick = () => {
-    this.#onDataChange({...this.#event, isFavorite: !this.#event.isFavorite});
+    this.#onDataChange(UserAction.UPDATE_EVENT,UpdateType.PATCH,{...this.#event, isFavorite: !this.#event.isFavorite});
   };
 }

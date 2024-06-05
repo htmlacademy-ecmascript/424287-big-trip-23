@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { SortType } from './const';
+import { SortType, FilterType } from './const';
 
 const DAY_FORMAT = 'MMM D';
 export const TIME_FORMAT = 'HH:mm';
@@ -33,4 +33,19 @@ const sortEventsBy = {
 
 };
 const sortEvents = (events, sortType) => sortEventsBy[sortType](events);
-export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents,getTimeDuration};
+
+const isFutureEvent = (date) => dayjs().isBefore(dayjs(date));
+const isPresentEvent = (dateFrom, dateTo) => dayjs().isAfter(dayjs(dateFrom)) && dayjs().isBefore(dayjs(dateTo));
+const isPastEvent = (date) => dayjs().isAfter(dayjs(date));
+
+const filter = {
+  [FilterType.EVERYTHING]: (events) => events,
+  [FilterType.FUTURE]: (events) => events.filter((event) => isFutureEvent(event.dateFrom)),
+  [FilterType.PRESENT]: (events) => events.filter((event) => isPresentEvent(event.dateFrom, event.dateTo)),
+  [FilterType.PAST]: (events) => events.filter((event) => isPastEvent(event.dateTo)),
+};
+
+const filterEvents = (events, filterType) => filter[filterType](events);
+
+
+export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents,getTimeDuration,filterEvents};

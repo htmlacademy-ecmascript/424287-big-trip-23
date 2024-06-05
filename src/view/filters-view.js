@@ -1,33 +1,49 @@
 import AbstractView from '../framework/view/abstract-view';
+import { FilterType } from '../const';
 
-const createFilterTemplate = () =>
+
+const PREFIX_FILTER = 'filter-';
+
+
+const createFilterTemplate = (currentFilterType) =>
   `<form class="trip-filters" action="#" method="get">
-      <div class="trip-filters__filter">
-        <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything">
-        <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
-      </div>
+     <div class="trip-filters__filter">
+     ${Object.values(FilterType).map((filterType) => (`<input id="filter-${filterType}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${filterType}" ${filterType === currentFilterType ? 'checked' : ''}>
+       <label class="trip-filters__filter-label" for="filter-${filterType}">${filterType}</label>`)).join('')}
+     </div>
 
-      <div class="trip-filters__filter">
-        <input id="filter-future" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="future">
-        <label class="trip-filters__filter-label" for="filter-future">Future</label>
-      </div>
 
-      <div class="trip-filters__filter">
-        <input id="filter-present" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="present">
-        <label class="trip-filters__filter-label" for="filter-present">Present</label>
-      </div>
 
-      <div class="trip-filters__filter">
-        <input id="filter-past" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="past" checked>
-        <label class="trip-filters__filter-label" for="filter-past">Past</label>
-      </div>
 
-      <button class="visually-hidden" type="submit">Accept filter</button>
-    </form>`;
+
+     <button class="visually-hidden" type="submit">Accept filter</button>
+   </form>`;
+
 
 export default class FiltersView extends AbstractView {
-  get template() {
-    return createFilterTemplate();
+  #currentFilterType = '';
+  #handleFilterChange = null;
+
+
+  constructor({currentFilterType, onFilterChange}) {
+    super();
+    this.#currentFilterType = currentFilterType || FilterType.EVERYTHING;
+    this.#handleFilterChange = onFilterChange;
+
+
+    this.element.addEventListener('change', this.#onFilterChange);
   }
 
+
+  get template() {
+    return createFilterTemplate(this.#currentFilterType);
+  }
+
+
+  #onFilterChange = (evt) => {
+    const filterType = evt.target.id.replace(PREFIX_FILTER, '');
+    this.#handleFilterChange(filterType);
+  };
 }
+
+

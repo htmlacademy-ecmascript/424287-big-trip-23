@@ -13,7 +13,7 @@ const createWayPointTemplate = (event,destinations,offers) => {
 
   return `<li class="trip-events__item">
   <div class="event">
-                <time class="event__date" datetime="${machineDueFormat(date)}">${date}</time>
+                <time class="event__date" datetime="${machineDueFormat(dateFrom)}">${date}</time>
                 <div class="event__type">
                   <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
                 </div>

@@ -106,6 +106,7 @@ export default class EditingForm extends AbstractStatefulView {
   #onSubmit = null;
   #datepickerStart = null;
   #datepickerEnd = null;
+  // #onSave = null;
 
   constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick}) {
     super();
@@ -115,13 +116,14 @@ export default class EditingForm extends AbstractStatefulView {
     this.#offers = offers;
     this.#onSubmit = onSubmit;
     this.#onClick = onClick;
+    // this.#onSave = onSave;
     this._restoreHandlers();
 
   }
 
   #onSubmitClick = (evt) => {
     evt.preventDefault();
-    this.#onSubmit();
+    this.#onSubmit(EditingForm.parseStateToEvent(this._state));
   };
 
   #onCloseBtnClick = (evt) => {
@@ -156,6 +158,7 @@ export default class EditingForm extends AbstractStatefulView {
       dateTo: userDate,
     });
   };
+
 
   get template() {
     return editEventFormTemplate(this._state,this.#destinations, this.#offers);
@@ -196,7 +199,7 @@ export default class EditingForm extends AbstractStatefulView {
         minDate: 'today',
         'time_24hr': true,
         defaultDate: this._state.dateFrom,
-        onChange: this.#onDateFromChangeClick, // На событие flatpickr передаём наш колбэк
+        onChange: this.#onDateFromChangeClick,
       },
     );
   }
@@ -210,7 +213,7 @@ export default class EditingForm extends AbstractStatefulView {
         minDate: this._state.dateFrom,
         'time_24hr': true,
         defaultDate: this._state.dateTo,
-        onChange: this.#onDateToChangeClick, // На событие flatpickr передаём наш колбэк
+        onChange: this.#onDateToChangeClick,
       },
     );
   }
