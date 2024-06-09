@@ -7,7 +7,7 @@ import EventPresenter from './event-presenter.js';
 import { updateItem, sortEvents,filterEvents } from '../util.js';
 import { SortType, FilterType,UserAction,UpdateType } from '../const.js';
 import NoEventView from '../view/no-event-view.js';
-
+import AddEventButtonView from '../view/add-event-button-view.js';
 export default class GeneralPresenter {
   #tripControlsFilters = null;
   #tripEvents = null;
@@ -21,6 +21,7 @@ export default class GeneralPresenter {
   #activeFilterType = FilterType.EVERYTHING;
   #filterView = null;
   #noEventComponent = null;
+  #newEvent = null;
 
   constructor({tripControlsFilters,tripEvents,pointModel}) {
     this.#tripControlsFilters = tripControlsFilters;
@@ -33,14 +34,14 @@ export default class GeneralPresenter {
 
   init() {
     this.#events = filterEvents(this.#pointModel.events,this.#activeFilterType);
-    // this.#events = sortEvents(this.#pointModel.events,this.#activeSortType);
+    this.#events = sortEvents(this.#events,this.#activeSortType);
     this.#clearTripEvents();
     this.#filterView = new FiltersView({currentFilterType:this.#activeFilterType, onFilterChange:this.#handleFilterChange});
     render(this.#filterView,this.#tripControlsFilters,RenderPosition.BEFOREEND);
     this.#sortView = new SortView({currentSortType:this.#activeSortType, onSortChange:this.#handleSortChange});
     render(this.#sortView,this.#tripEvents);
     this.#renderTripEvents(this.#pointModel);
-
+    this.#newEvent = new AddEventButtonView({onClick:this.#handleNewEvent});
   }
 
   #clearTripEvents() {
@@ -92,7 +93,6 @@ export default class GeneralPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    // console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
         this.#eventPresenters.get(data.id).init(data);
@@ -127,6 +127,13 @@ export default class GeneralPresenter {
     });
     render(this.#noEventComponent,this.#eventListComponent.element);
   }
+
+  #handleNewEvent = (evt) => {
+    evt.preventDefault();
+    console.log(123);
+    this.init();
+
+  };
 
 }
 

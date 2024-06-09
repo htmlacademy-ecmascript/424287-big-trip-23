@@ -1,5 +1,5 @@
 import { KIND_OF_POINTS, getDefaultEvent } from '../const';
-import { humanizeDueTimeForForm } from '../util.js';
+import { humanizeDueTimeForForm,getPositiveNumber,addItem,removeItem } from '../util.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 import flatpickr from 'flatpickr';
@@ -73,9 +73,9 @@ ${typeOffers.length ? `
     <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 ${typeOffers.map((typeOffer) => ` <div class="event__available-offers">
 <div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-${typeOffer.title}-1" type="checkbox" name="event-${typeOffer.title}" ${eventOffers.map((offer) => offer.id).includes(typeOffer.id) ? 'checked' : ''}>
-  <label class="event__offer-label" for="event-${typeOffer.title}-1">
-    <span class="event__offer-title">${typeOffer.title}</span>
+<input class="event__offer-checkbox  visually-hidden" id="event-${typeOffer.title}-1" type="checkbox" name="event-${typeOffer.title}" data-id="${typeOffer.id}" ${eventOffers.map((offer) => offer.id).includes(typeOffer.id) ? 'checked' : ''}>
+<label class="event__offer-label" for="event-${typeOffer.title}-1">
+  <span class="event__offer-title">${typeOffer.title}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${typeOffer.price}</span>
   </label>
@@ -106,7 +106,6 @@ export default class EditingForm extends AbstractStatefulView {
   #onSubmit = null;
   #datepickerStart = null;
   #datepickerEnd = null;
-  // #onSave = null;
 
   constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick}) {
     super();
@@ -116,9 +115,12 @@ export default class EditingForm extends AbstractStatefulView {
     this.#offers = offers;
     this.#onSubmit = onSubmit;
     this.#onClick = onClick;
-    // this.#onSave = onSave;
     this._restoreHandlers();
 
+  }
+
+  get template() {
+    return editEventFormTemplate(this._state,this.#destinations, this.#offers);
   }
 
   #onSubmitClick = (evt) => {
@@ -159,16 +161,32 @@ export default class EditingForm extends AbstractStatefulView {
     });
   };
 
+  #onPriceChangeInput = (evt) => {
+    const basePrice = getPositiveNumber(evt.target.value);
+    evt.target.value = basePrice;
 
-  get template() {
-    return editEventFormTemplate(this._state,this.#destinations, this.#offers);
-  }
+    this._setState({ basePrice });
+  };
+
+  #onOfferClick = (evt) => {
+    evt.preventDefault();
+    const offersArr = this.element.querySelectorAll('.event__offer-checkbox:checked');
+    const offers = Array.from(offersArr,(offer) => offer.dataset.id);
+    this._setState({offers: offers});
+    //каждый последующий выбор удаляет предыдущий?
+  };
 
   _restoreHandlers() {
     this.element.addEventListener('submit', this.#onSubmitClick);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onEventDestinationClick);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChangeInput);
+    const availableOffers = this.element.querySelector('.event__available-offers');
+    if(availableOffers) {
+      availableOffers.addEventListener('change',this.#onOfferClick);
+    }
+
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
   }
