@@ -162,7 +162,6 @@ export default class GeneralPresenter {
   };
 
   #onNewEventFormClose = () => {
-    console.log(123);
   };
 
 }
