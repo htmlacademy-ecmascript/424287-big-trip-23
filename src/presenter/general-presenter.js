@@ -4,10 +4,11 @@ import EventListView from '../view/event-list-view.js';
 import {RenderPosition} from '../render.js';
 import { render, remove} from '../framework/render.js';
 import EventPresenter from './event-presenter.js';
-import { updateItem, sortEvents,filterEvents } from '../util.js';
+import { sortEvents,filterEvents } from '../util.js';
 import { SortType, FilterType,UserAction,UpdateType } from '../const.js';
 import NoEventView from '../view/no-event-view.js';
-import AddEventButtonView from '../view/add-event-button-view.js';
+import NewEventButtonView from '../view/new-event-button-view.js';
+import NewEventPresenter from './new-event-presenter.js';
 export default class GeneralPresenter {
   #tripControlsFilters = null;
   #tripEvents = null;
@@ -22,26 +23,34 @@ export default class GeneralPresenter {
   #filterView = null;
   #noEventComponent = null;
   #newEvent = null;
+  #newEventBtn = null;
+  #newEventPresenter = null;
 
-  constructor({tripControlsFilters,tripEvents,pointModel}) {
+  constructor({tripControlsFilters,tripEvents,pointModel,newEventBtn}) {
     this.#tripControlsFilters = tripControlsFilters;
     this.#tripEvents = tripEvents;
     this.#pointModel = pointModel;
     this.#eventListComponent = new EventListView();
     this.#pointModel.addObserver(this.#handleModelEvent);
-
+    this.#newEventBtn = newEventBtn;
   }
 
   init() {
     this.#events = filterEvents(this.#pointModel.events,this.#activeFilterType);
     this.#events = sortEvents(this.#events,this.#activeSortType);
     this.#clearTripEvents();
-    this.#filterView = new FiltersView({currentFilterType:this.#activeFilterType, onFilterChange:this.#handleFilterChange});
-    render(this.#filterView,this.#tripControlsFilters,RenderPosition.BEFOREEND);
-    this.#sortView = new SortView({currentSortType:this.#activeSortType, onSortChange:this.#handleSortChange});
-    render(this.#sortView,this.#tripEvents);
+    // this.#filterView = new FiltersView({currentFilterType:this.#activeFilterType, onFilterChange:this.#handleFilterChange});
+    // render(this.#filterView,this.#tripControlsFilters,RenderPosition.BEFOREEND);
+    // this.#sortView = new SortView({currentSortType:this.#activeSortType, onSortChange:this.#handleSortChange});
+    // render(this.#sortView,this.#tripEvents);
+    this.#renderHeader();
     this.#renderTripEvents(this.#pointModel);
-    this.#newEvent = new AddEventButtonView({onClick:this.#handleNewEvent});
+    this.#renderNewEventBtn();
+  }
+
+  #renderNewEventBtn() {
+    this.#newEvent = new NewEventButtonView({onClick:this.#handleNewEvent});
+    render(this.#newEvent, this.#newEventBtn,RenderPosition.BEFOREEND);
   }
 
   #clearTripEvents() {
@@ -51,10 +60,18 @@ export default class GeneralPresenter {
     remove(this.#sortView);
     remove(this.#eventListComponent);
     remove(this.#filterView);
+    remove(this.#newEvent);
     if (this.#noEventComponent) {
       remove(this.#noEventComponent);
     }
 
+  }
+
+  #renderHeader() {
+    this.#filterView = new FiltersView({currentFilterType:this.#activeFilterType, onFilterChange:this.#handleFilterChange});
+    render(this.#filterView,this.#tripControlsFilters,RenderPosition.BEFOREEND);
+    this.#sortView = new SortView({currentSortType:this.#activeSortType, onSortChange:this.#handleSortChange});
+    render(this.#sortView,this.#tripEvents);
   }
 
   #renderTripEvents() {
@@ -99,6 +116,8 @@ export default class GeneralPresenter {
         break;
       case UpdateType.MINOR:
         this.#clearTripEvents();
+        this.#renderHeader();
+        this.#renderNewEventBtn();
         this.#renderTripEvents();
         break;
       case UpdateType.MAJOR:
@@ -128,11 +147,22 @@ export default class GeneralPresenter {
     render(this.#noEventComponent,this.#eventListComponent.element);
   }
 
-  #handleNewEvent = (evt) => {
-    evt.preventDefault();
-    console.log(123);
-    this.init();
+  #handleNewEvent = () => {
+    this.#newEvent.element.disabled = true;
 
+    this.#newEventPresenter = new NewEventPresenter({
+      destinations: this.#pointModel.destinations,
+      offers: this.#pointModel.offers,
+      containerElement: this.#eventListComponent.element,
+      onNewEventFormClose: this.#onNewEventFormClose,
+      onEventChange: this.#onNewEventFormClose
+    });
+    this.#newEventPresenter.init();
+
+  };
+
+  #onNewEventFormClose = () => {
+    console.log(123);
   };
 
 }

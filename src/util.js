@@ -47,5 +47,20 @@ const filter = {
 
 const filterEvents = (events, filterType) => filter[filterType](events);
 
+const getPositiveNumber = (string) => {
+  if (!string) {
+    return null;
+  }
 
-export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents,getTimeDuration,filterEvents};
+  const valueInput = parseInt(string, 10);
+  if (isNaN(valueInput) || (valueInput <= 0)) {
+    return null;
+  }
+
+  return valueInput;
+};
+
+const addItem = (items,item) => Array.from(new Set([...items,item]));
+const removeItem = (items,item) => items.filter((el) => el !== item);
+
+export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents,getTimeDuration,filterEvents,getPositiveNumber, addItem,removeItem};

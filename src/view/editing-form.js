@@ -1,9 +1,10 @@
 import { KIND_OF_POINTS, getDefaultEvent } from '../const';
-import { humanizeDueTimeForForm,getPositiveNumber,addItem,removeItem } from '../util.js';
+import { humanizeDueTimeForForm,getPositiveNumber} from '../util.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import he from 'he';
 
 const editEventFormTemplate = (event,destinations,offers) => {
   const {type,dateFrom,dateTo,basePrice} = event;
@@ -38,7 +39,7 @@ ${KIND_OF_POINTS.map((pointType) => (`<div class="event__type-item">
     <label class="event__label  event__type-output" for="event-destination-1">
     ${type}
     </label>
-    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${name || ''}" list="destination-list-1">
+    <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${he.encode(name || '')}" list="destination-list-1">
     <datalist id="destination-list-1">
       ${destinations.map((destination) => `<option value="${destination.name}"></option>)`).join('')}
     </datalist>
@@ -106,8 +107,9 @@ export default class EditingForm extends AbstractStatefulView {
   #onSubmit = null;
   #datepickerStart = null;
   #datepickerEnd = null;
+  #onReset = null;
 
-  constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick}) {
+  constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick, onReset}) {
     super();
     this.#event = event;
     this._setState(EditingForm.parseEventToState(event));
@@ -115,6 +117,7 @@ export default class EditingForm extends AbstractStatefulView {
     this.#offers = offers;
     this.#onSubmit = onSubmit;
     this.#onClick = onClick;
+    this.#onReset = onReset;
     this._restoreHandlers();
 
   }
@@ -176,9 +179,14 @@ export default class EditingForm extends AbstractStatefulView {
     //каждый последующий выбор удаляет предыдущий?
   };
 
+  #onDeleteBtnClick = (evt) => {
+    evt.preventDefault();
+    this.#onReset(EditingForm.parseStateToEvent(this._state));
+  };
+
   _restoreHandlers() {
     this.element.addEventListener('submit', this.#onSubmitClick);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
+    // this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onEventDestinationClick);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChangeInput);
@@ -186,7 +194,7 @@ export default class EditingForm extends AbstractStatefulView {
     if(availableOffers) {
       availableOffers.addEventListener('change',this.#onOfferClick);
     }
-
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
   }
