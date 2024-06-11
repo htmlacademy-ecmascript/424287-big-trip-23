@@ -105,7 +105,7 @@ export default class GeneralPresenter {
         this.#pointModel.deleteEvent(updateType, update);
         break;
     }
-    this.#eventPresenters.get(update.id).init(update);
+    // this.#eventPresenters.get(update.id).init(update);
 
   };
 
@@ -115,12 +115,14 @@ export default class GeneralPresenter {
         this.#eventPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        this.#clearTripEvents();
-        this.#renderHeader();
-        this.#renderNewEventBtn();
-        this.#renderTripEvents();
+        // this.#clearTripEvents();
+        // this.#renderHeader();
+        // this.#renderNewEventBtn();
+        // this.#renderTripEvents();
+        this.init();
         break;
       case UpdateType.MAJOR:
+        this.init();
         break;
     }
   };
@@ -153,15 +155,12 @@ export default class GeneralPresenter {
     this.#newEventPresenter = new NewEventPresenter({
       destinations: this.#pointModel.destinations,
       offers: this.#pointModel.offers,
-      containerElement: this.#eventListComponent.element,
-      onNewEventFormClose: this.#onNewEventFormClose,
-      onEventChange: this.#onNewEventFormClose
+      eventListContainer: this.#eventListComponent.element,
+      onEditStart: this.#resetAllViews,
+      onDataChange: this.#onDataChange
     });
     this.#newEventPresenter.init();
 
-  };
-
-  #onNewEventFormClose = () => {
   };
 
 }

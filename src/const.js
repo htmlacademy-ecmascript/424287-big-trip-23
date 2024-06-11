@@ -10,8 +10,8 @@ const CITIES = ['London','Paris','Rome','Berlin','Madrid'];
 const getDefaultEvent = () => ({
   id: '',
   basePrice: 0,
-  dateFrom: new Date().toString(),
-  dateTo: new Date().toString(),
+  dateFrom: null,
+  dateTo: null,
   destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',//? с null выдает ошибку
   isFavorite: false,
   offers: [],

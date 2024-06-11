@@ -26,7 +26,7 @@ export default class NewEventPresenter {
     this.#event = event;
 
     this.#eventEditView = new EditingForm({event,destinations:this.#destinations, offers:this.#offers, onSubmit: (newState) => {
-      this.#onDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR,newState);
+      this.#onDataChange(UserAction.ADD_EVENT, UpdateType.MINOR,newState);
     }, onClick:() => {
       this.#switchToViewMode();
     },onSave:() => {

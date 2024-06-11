@@ -108,6 +108,7 @@ export default class EditingForm extends AbstractStatefulView {
   #datepickerStart = null;
   #datepickerEnd = null;
   #onReset = null;
+  #isAddingNewEvent = false;
 
   constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick, onReset}) {
     super();
@@ -118,12 +119,13 @@ export default class EditingForm extends AbstractStatefulView {
     this.#onSubmit = onSubmit;
     this.#onClick = onClick;
     this.#onReset = onReset;
+    this.#isAddingNewEvent = !event.id;
     this._restoreHandlers();
 
   }
 
   get template() {
-    return editEventFormTemplate(this._state,this.#destinations, this.#offers);
+    return editEventFormTemplate(this._state,this.#destinations, this.#offers,this.#isAddingNewEvent);
   }
 
   #onSubmitClick = (evt) => {
@@ -176,7 +178,6 @@ export default class EditingForm extends AbstractStatefulView {
     const offersArr = this.element.querySelectorAll('.event__offer-checkbox:checked');
     const offers = Array.from(offersArr,(offer) => offer.dataset.id);
     this._setState({offers: offers});
-    //каждый последующий выбор удаляет предыдущий?
   };
 
   #onDeleteBtnClick = (evt) => {
@@ -186,7 +187,9 @@ export default class EditingForm extends AbstractStatefulView {
 
   _restoreHandlers() {
     this.element.addEventListener('submit', this.#onSubmitClick);
-    // this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
+    if(!this.#isAddingNewEvent) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
+    }
     this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeClick);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#onEventDestinationClick);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChangeInput);
