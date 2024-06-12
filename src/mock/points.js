@@ -2,8 +2,8 @@ export const events = [
   {
     id: 1,
     basePrice: 1500,
-    dateFrom: '2023-03-11T16:45:56.845Z',
-    dateTo: '2023-03-11T17:22:13.375Z',
+    dateFrom: '2024-03-11T16:45:56.845Z',
+    dateTo: '2024-07-11T17:22:13.375Z',
     destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',
     isFavorite: false,
     offers: [
@@ -14,8 +14,8 @@ export const events = [
   {
     id: 2,
     basePrice: 1120,
-    dateFrom: '2023-04-10T11:55:56.845Z',
-    dateTo: '2023-04-12T12:22:13.375Z',
+    dateFrom: '2020-04-10T11:55:56.845Z',
+    dateTo: '2020-04-12T12:22:13.375Z',
     destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',
     isFavorite: true,
     offers: [

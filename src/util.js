@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { SortType } from './const';
+import { SortType, FilterType } from './const';
 
 const DAY_FORMAT = 'MMM D';
 export const TIME_FORMAT = 'HH:mm';
@@ -33,4 +33,34 @@ const sortEventsBy = {
 
 };
 const sortEvents = (events, sortType) => sortEventsBy[sortType](events);
-export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents,getTimeDuration};
+
+const isFutureEvent = (date) => dayjs().isBefore(dayjs(date));
+const isPresentEvent = (dateFrom, dateTo) => dayjs().isAfter(dayjs(dateFrom)) && dayjs().isBefore(dayjs(dateTo));
+const isPastEvent = (date) => dayjs().isAfter(dayjs(date));
+
+const filter = {
+  [FilterType.EVERYTHING]: (events) => events,
+  [FilterType.FUTURE]: (events) => events.filter((event) => isFutureEvent(event.dateFrom)),
+  [FilterType.PRESENT]: (events) => events.filter((event) => isPresentEvent(event.dateFrom, event.dateTo)),
+  [FilterType.PAST]: (events) => events.filter((event) => isPastEvent(event.dateTo)),
+};
+
+const filterEvents = (events, filterType) => filter[filterType](events);
+
+const getPositiveNumber = (string) => {
+  if (!string) {
+    return null;
+  }
+
+  const valueInput = parseInt(string, 10);
+  if (isNaN(valueInput) || (valueInput <= 0)) {
+    return null;
+  }
+
+  return valueInput;
+};
+
+const addItem = (items,item) => Array.from(new Set([...items,item]));
+const removeItem = (items,item) => items.filter((el) => el !== item);
+
+export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents,getTimeDuration,filterEvents,getPositiveNumber, addItem,removeItem};

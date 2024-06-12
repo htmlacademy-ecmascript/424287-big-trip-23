@@ -1,8 +1,9 @@
-import WayPoint from '../view/way-point.js';
 import EditingForm from '../view/editing-form.js';
-import { remove, render, replace} from '../framework/render.js';
+import {remove, render, RenderPosition,replace} from '../framework/render.js';
 import { Mode,UpdateType,UserAction } from '../const.js';
-export default class EventPresenter {
+import {nanoid} from 'nanoid';
+
+export default class NewEventPresenter {
   #event = null;
   #destinations = [];
   #offers = [];
@@ -24,14 +25,8 @@ export default class EventPresenter {
   init(event) {
     this.#event = event;
 
-    const prevEventView = this.#tripEventView;
-
-    this.#tripEventView = new WayPoint({event,destinations:this.#destinations, offers:this.#offers, onClick: () => {
-      this.#switchToEditMode();
-    }, onBtnClick: this.#onFavoriteBtnClick});
-
     this.#eventEditView = new EditingForm({event,destinations:this.#destinations, offers:this.#offers, onSubmit: (newState) => {
-      this.#onDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR,newState);
+      this.#onDataChange(UserAction.ADD_EVENT, UpdateType.MINOR,newState);
     }, onClick:() => {
       this.#switchToViewMode();
     },onSave:() => {
@@ -41,12 +36,7 @@ export default class EventPresenter {
     }});
 
 
-    if(prevEventView === null) {
-      render(this.#tripEventView, this.#eventListContainer);
-      return;
-    }
-
-    replace(this.#tripEventView,prevEventView);
+    render(this.#eventEditView, this.#eventListContainer, RenderPosition.AFTERBEGIN);
 
 
   }
@@ -98,3 +88,5 @@ export default class EventPresenter {
     this.#onDataChange(UserAction.DELETE_EVENT, UpdateType.MINOR, {...this.#event});
   };
 }
+
+
