@@ -9,6 +9,14 @@ import { SortType, FilterType,UserAction,UpdateType } from '../const.js';
 import NoEventView from '../view/no-event-view.js';
 import NewEventButtonView from '../view/new-event-button-view.js';
 import NewEventPresenter from './new-event-presenter.js';
+import LoadingView from '../view/loading-view.js';
+import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
+
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 export default class GeneralPresenter {
   #tripControlsFilters = null;
   #tripEvents = null;
@@ -25,6 +33,12 @@ export default class GeneralPresenter {
   #newEvent = null;
   #newEventBtn = null;
   #newEventPresenter = null;
+  #loadingComponent = new LoadingView();
+  #isLoading = true;
+  #uiBlocker = new UiBlocker({
+    lowerLimit: TimeLimit.LOWER_LIMIT,
+    upperLimit: TimeLimit.UPPER_LIMIT
+  });
 
   constructor({tripControlsFilters,tripEvents,pointModel,newEventBtn}) {
     this.#tripControlsFilters = tripControlsFilters;
@@ -61,6 +75,7 @@ export default class GeneralPresenter {
     remove(this.#eventListComponent);
     remove(this.#filterView);
     remove(this.#newEvent);
+    remove(this.#loadingComponent);
     if (this.#noEventComponent) {
       remove(this.#noEventComponent);
     }
@@ -79,6 +94,10 @@ export default class GeneralPresenter {
       this.#renderNoEvents();
     }
     render(this.#eventListComponent,this.#tripEvents);
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
     this.#events.forEach((event) => this.#renderTripEvent(event));
   }
 
@@ -93,20 +112,39 @@ export default class GeneralPresenter {
     this.#eventPresenters.set(event.id, eventPresenter);
   }
 
-  #onDataChange = (actionType, updateType, update) => {
+  #onDataChange = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
-        this.#pointModel.updateEvent(updateType, update);
+        this.#eventPresenters.get(update.id).setSaving();
+
+        try {
+          await this.#pointModel.updateEvent(updateType, update);
+        } catch(err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
         break;
       case UserAction.ADD_EVENT:
-        this.#pointModel.addEvent(updateType, update);
+        this.#newEventPresenter.setSaving();
+        try {
+          await this.#pointModel.addEvent(updateType, update);
+        } catch(err) {
+          this.#newEventPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_EVENT:
-        this.#pointModel.deleteEvent(updateType, update);
+        this.#eventPresenters.get(update.id).setDeleting();
+        try {
+          await this.#pointModel.deleteEvent(updateType, update);
+
+        } catch(err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
         break;
+
     }
     // this.#eventPresenters.get(update.id).init(update);
-
+    this.#uiBlocker.unblock();
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -123,6 +161,13 @@ export default class GeneralPresenter {
         break;
       case UpdateType.MAJOR:
         this.init();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        // this.#renderTripEvents();
+        this.init();
+
         break;
     }
   };
@@ -162,6 +207,10 @@ export default class GeneralPresenter {
     this.#newEventPresenter.init();
 
   };
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
+  }
 
 }
 
