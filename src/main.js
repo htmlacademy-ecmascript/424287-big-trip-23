@@ -2,7 +2,6 @@ import GeneralPresenter from './presenter/general-presenter';
 import PointsModel from './model/points-model';
 
 import EventsApiService from './events-api-service.js';
-import {render} from './framework/render.js';
 
 const AUTHORIZATION = 'Basic hS6sfS57zcl7sa8j';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
