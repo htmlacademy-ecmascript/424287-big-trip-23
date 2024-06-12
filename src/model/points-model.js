@@ -15,10 +15,10 @@ export default class PointsModel extends Observable {
     super();
     this.#eventsApiService = eventsApiService;
 
-    // this.#eventsApiService.events.then((events) => {
-    //   console.log(events.map(this.#adaptToClient));
+    this.#eventsApiService.events.then((events) => {
+      console.log(events.map(this.#adaptToClient));
 
-    // });
+    });
   }
 
 
@@ -39,10 +39,7 @@ export default class PointsModel extends Observable {
     try {
       this.#destinations = await this.#eventsApiService.destinations;
 
-      const offers = await this.#eventsApiService.offers;
-      offers.forEach(({ type, offers: typeOffers }) => {
-        this.#offers.set(type, typeOffers);
-      });
+      this.#offers = await this.#eventsApiService.offers;
       const events = await this.#eventsApiService.events;
       this.#events = events.map(this.#adaptToClient);
 
