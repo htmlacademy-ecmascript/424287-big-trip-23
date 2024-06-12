@@ -14,11 +14,6 @@ export default class PointsModel extends Observable {
   constructor({eventsApiService}) {
     super();
     this.#eventsApiService = eventsApiService;
-
-    this.#eventsApiService.events.then((events) => {
-      console.log(events.map(this.#adaptToClient));
-
-    });
   }
 
 
