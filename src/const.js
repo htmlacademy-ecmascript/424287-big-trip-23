@@ -8,11 +8,11 @@ const DESCRIPTION = ['Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
   'Sequi, eius cum nihil sed placeat ut pariatur quam iure consectetur consequuntur delectus deleniti quis deserunt praesentium saepe obcaecati itaque odit ullam! Illum ex dolorum voluptatibus a, esse perspiciatis rerum?'];
 const CITIES = ['London','Paris','Rome','Berlin','Madrid'];
 const getDefaultEvent = () => ({
-  id: '',
+  // id: '',
   basePrice: 0,
   dateFrom: null,
   dateTo: null,
-  destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',//? с null выдает ошибку
+  // destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',//? с null выдает ошибку
   isFavorite: false,
   offers: [],
   type: KIND_OF_POINTS[0]
