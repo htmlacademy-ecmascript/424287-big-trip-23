@@ -1,4 +1,4 @@
-import { KIND_OF_POINTS, getDefaultEvent } from '../const';
+import { KIND_OF_POINTS } from '../const';
 import { humanizeDueTimeForForm,getPositiveNumber} from '../util.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 
@@ -6,13 +6,26 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import he from 'he';
 
+const getResetButtonCaption = (isAddingNewEvent, isDeleting) => {
+  if (isAddingNewEvent) {
+    return 'Cancel';
+  }
+
+  if (isDeleting) {
+    return 'Deleting...';
+  }
+
+  return 'Delete';
+};
 const editEventFormTemplate = (event,destinations,offers,isAddingNewEvent) => {
-  const {type,dateFrom,dateTo,basePrice} = event;
+  const {type,dateFrom,dateTo,basePrice,isSaving,isDeleting} = event;
   const currentDestination = destinations.find((destination) => destination.id === event.destination);
-  const {name, description, pictures} = currentDestination;
-  const typeOffers = offers.find((offer) => offer.type === event.type).offers;
-  const eventOffers = typeOffers.filter((typeOffer) => event.offers.includes(typeOffer.id));
-  return `  <li class="trip-events__item">
+  const resetButtonCaption = getResetButtonCaption(isAddingNewEvent, isDeleting);
+  if(event.destination) {
+    const {name, description, pictures} = currentDestination;
+    const typeOffers = offers.find((offer) => offer.type === event.type).offers;
+    const eventOffers = typeOffers.filter((typeOffer) => event.offers.includes(typeOffer.id));
+    return `  <li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
 <header class="event__header">
   <div class="event__type-wrapper">
@@ -61,8 +74,8 @@ ${KIND_OF_POINTS.map((pointType) => (`<div class="event__type-item">
     <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
   </div>
 
-  <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-  <button class="event__reset-btn" type="reset">${!isAddingNewEvent ? 'Delete' : 'Cancel'}</button>
+  <button class="event__save-btn  btn  btn--blue" type="submit">${(isSaving) ? 'Saving...' : 'Save'}</button>
+  <button class="event__reset-btn" type="reset">${resetButtonCaption}</button>
   ${!isAddingNewEvent ? ` <button class="event__rollup-btn" type="button">
   <span class="visually-hidden">Open event</span>
 </button>` : ''}
@@ -97,6 +110,7 @@ ${currentDestination ? (`<section class="event__section  event__section--destina
 
 </form>
 </li>`;
+  }
 };
 export default class EditingForm extends AbstractStatefulView {
   #event = null;
@@ -110,9 +124,8 @@ export default class EditingForm extends AbstractStatefulView {
   #onReset = null;
   #isAddingNewEvent = false;
 
-  constructor({event = getDefaultEvent(), destinations,offers, onSubmit, onClick, onReset}) {
+  constructor({event, destinations,offers, onSubmit, onClick, onReset}) {
     super();
-    this.#event = event;
     this._setState(EditingForm.parseEventToState(event));
     this.#destinations = destinations;
     this.#offers = offers;

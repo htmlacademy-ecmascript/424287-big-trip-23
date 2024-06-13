@@ -53,10 +53,6 @@ export default class GeneralPresenter {
     this.#events = filterEvents(this.#pointModel.events,this.#activeFilterType);
     this.#events = sortEvents(this.#events,this.#activeSortType);
     this.#clearTripEvents();
-    // this.#filterView = new FiltersView({currentFilterType:this.#activeFilterType, onFilterChange:this.#handleFilterChange});
-    // render(this.#filterView,this.#tripControlsFilters,RenderPosition.BEFOREEND);
-    // this.#sortView = new SortView({currentSortType:this.#activeSortType, onSortChange:this.#handleSortChange});
-    // render(this.#sortView,this.#tripEvents);
     this.#renderHeader();
     this.#renderTripEvents(this.#pointModel);
     this.#renderNewEventBtn();
@@ -90,15 +86,16 @@ export default class GeneralPresenter {
   }
 
   #renderTripEvents() {
-    if(!this.#events.length) {
-      this.#renderNoEvents();
-    }
+
     render(this.#eventListComponent,this.#tripEvents);
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
     this.#events.forEach((event) => this.#renderTripEvent(event));
+    if(!this.#events.length) {
+      this.#renderNoEvents();
+    }
   }
 
   #renderTripEvent(event) {
@@ -143,7 +140,6 @@ export default class GeneralPresenter {
         break;
 
     }
-    // this.#eventPresenters.get(update.id).init(update);
     this.#uiBlocker.unblock();
   };
 
@@ -153,10 +149,6 @@ export default class GeneralPresenter {
         this.#eventPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        // this.#clearTripEvents();
-        // this.#renderHeader();
-        // this.#renderNewEventBtn();
-        // this.#renderTripEvents();
         this.init();
         break;
       case UpdateType.MAJOR:
@@ -165,7 +157,6 @@ export default class GeneralPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        // this.#renderTripEvents();
         this.init();
 
         break;

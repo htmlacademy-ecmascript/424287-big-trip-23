@@ -8,8 +8,6 @@ export default class PointsModel extends Observable {
   #events = [];
   #destinations = [];
   #offers = [];
-  // #offers = new Map();
-
 
   constructor({eventsApiService}) {
     super();
@@ -40,6 +38,8 @@ export default class PointsModel extends Observable {
 
     } catch(err) {
       this.#events = [];
+      this.#destinations = [];
+      this.#offers = [];
     }
     this._notify(UpdateType.INIT);
   }

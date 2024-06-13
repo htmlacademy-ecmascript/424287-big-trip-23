@@ -7,17 +7,25 @@ const DESCRIPTION = ['Lorem ipsum dolor sit, amet consectetur adipisicing elit. 
   'Repudiandae praesentium exercitationem iste beatae libero voluptatem magni fugiat animi molestiae perspiciatis quis ex officiis, aspernatur assumenda repellat veniam odit sit illo sequi aut! Ipsa officiis eveniet aliquid ex incidunt!',
   'Sequi, eius cum nihil sed placeat ut pariatur quam iure consectetur consequuntur delectus deleniti quis deserunt praesentium saepe obcaecati itaque odit ullam! Illum ex dolorum voluptatibus a, esse perspiciatis rerum?'];
 const CITIES = ['London','Paris','Rome','Berlin','Madrid'];
-const getDefaultEvent = () => ({
-  // id: '',
+// const getDefaultEvent = () => ({
+//   // id: '',
+//   basePrice: 0,
+//   dateFrom: null,
+//   dateTo: null,
+//   // destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',//? с null выдает ошибку
+//   isFavorite: false,
+//   offers: [],
+//   type: KIND_OF_POINTS[0]
+// });
+
+const DEFAULT_EVENT = {
+  type: KIND_OF_POINTS[0],
   basePrice: 0,
   dateFrom: null,
   dateTo: null,
-  // destination: 'bfa5cb75-a1fe-4b77-a83c-0e528e910e05',//? с null выдает ошибку
   isFavorite: false,
-  offers: [],
-  type: KIND_OF_POINTS[0]
-});
-
+  offers: []
+};
 
 export const Mode = {
   DEFAULT: 'DEFAULT',
@@ -61,5 +69,5 @@ const UserAction = {
   DELETE_EVENT: 'DELETE_EVENT',
 };
 
-export {KIND_OF_POINTS,DESCRIPTION,CITIES,getDefaultEvent,UpdateType,UserAction};
+export {KIND_OF_POINTS,DESCRIPTION,CITIES,DEFAULT_EVENT ,UpdateType,UserAction};
 //dayjs(taskB.dueDate).diff(dayjs(taskA.dueDate))
