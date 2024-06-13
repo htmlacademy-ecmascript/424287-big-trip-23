@@ -1,15 +1,18 @@
 import dayjs from 'dayjs';
 import { SortType, FilterType } from './const';
 
-const DAY_FORMAT = 'MMM D';
-export const TIME_FORMAT = 'HH:mm';
-const MACHINE_FORMAT = 'YYYY-MM-DD';
-const FORM_FORMAT = 'DD/MM/YY HH:mm';//enum
+export const DateFormat = {
+  DAY_FORMAT: 'MMM D',
+  TIME_FORMAT: 'HH:mm',
+  MACHINE_FORMAT: 'YYYY-MM-DD',
+  FORM_FORMAT: 'DD/MM/YY HH:mm'
+} ;
+
 const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
-const humanizeDueDate = (dueDate) => dueDate ? dayjs(dueDate).format(DAY_FORMAT) : '';
-const humanizeDueTime = (dueDate) => dueDate ? dayjs(dueDate).format(TIME_FORMAT) : '';
-const machineDueFormat = (dueDate) => dueDate ? dayjs(dueDate).format(MACHINE_FORMAT) : '';
-const humanizeDueTimeForForm = (dueDate) => dueDate ? dayjs(dueDate).format(FORM_FORMAT) : '';
+const humanizeDueDate = (dueDate) => dueDate ? dayjs(dueDate).format(DateFormat.DAY_FORMAT) : '';
+const humanizeDueTime = (dueDate) => dueDate ? dayjs(dueDate).format(DateFormat.TIME_FORMAT) : '';
+const machineDueFormat = (dueDate) => dueDate ? dayjs(dueDate).format(DateFormat.MACHINE_FORMAT) : '';
+const humanizeDueTimeForForm = (dueDate) => dueDate ? dayjs(dueDate).format(DateFormat.FORM_FORMAT) : '';
 
 const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 const getTimeDifference = ({dateFrom,dateTo}) => (new Date(dateTo)).getTime() - (new Date(dateFrom)).getTime();
