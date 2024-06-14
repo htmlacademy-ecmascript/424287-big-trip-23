@@ -59,5 +59,7 @@ const UserAction = {
   DELETE_EVENT: 'DELETE_EVENT',
 };
 
-export {KIND_OF_POINTS,DESCRIPTION,CITIES,DEFAULT_EVENT ,UpdateType,UserAction};
-//dayjs(taskB.dueDate).diff(dayjs(taskA.dueDate))
+const AUTHORIZATION = 'Basic hS6sfS57zcl7sa8j';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
+
+export {KIND_OF_POINTS,DESCRIPTION,CITIES,DEFAULT_EVENT ,UpdateType,UserAction,AUTHORIZATION,END_POINT};

@@ -152,6 +152,8 @@ export default class GeneralPresenter {
         this.init();
         break;
       case UpdateType.MAJOR:
+        this.#activeSortType = SortType.DAY;
+        this.#activeFilterType = FilterType.EVERYTHING;
         this.init();
         break;
       case UpdateType.INIT:
@@ -196,7 +198,6 @@ export default class GeneralPresenter {
       onDataChange: this.#onDataChange
     });
     this.#newEventPresenter.init();
-
   };
 
   #renderLoading() {

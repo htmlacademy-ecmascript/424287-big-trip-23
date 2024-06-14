@@ -21,11 +21,10 @@ const editEventFormTemplate = (event,destinations,offers,isAddingNewEvent) => {
   const {type,dateFrom,dateTo,basePrice,isSaving,isDeleting} = event;
   const currentDestination = destinations.find((destination) => destination.id === event.destination);
   const resetButtonCaption = getResetButtonCaption(isAddingNewEvent, isDeleting);
-  if(event.destination) {
-    const {name, description, pictures} = currentDestination;
-    const typeOffers = offers.find((offer) => offer.type === event.type).offers;
-    const eventOffers = typeOffers.filter((typeOffer) => event.offers.includes(typeOffer.id));
-    return `  <li class="trip-events__item">
+  const {name, description, pictures} = currentDestination || {};
+  const typeOffers = offers.find((offer) => offer.type === event.type).offers;
+  const eventOffers = typeOffers.filter((typeOffer) => event.offers.includes(typeOffer.id));
+  return `  <li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
 <header class="event__header">
   <div class="event__type-wrapper">
@@ -110,13 +109,12 @@ ${currentDestination ? (`<section class="event__section  event__section--destina
 
 </form>
 </li>`;
-  }
 };
+
 export default class EditingForm extends AbstractStatefulView {
   #event = null;
   #destinations = null;
   #offers = null;
-  #typeOffers = null;
   #onClick = null;
   #onSubmit = null;
   #datepickerStart = null;

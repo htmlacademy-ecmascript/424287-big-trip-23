@@ -127,5 +127,5 @@ export default class EventPresenter {
   #onDelete = () => {
     this.#onDataChange(UserAction.DELETE_EVENT, UpdateType.MINOR, {...this.#event});
   };
-  //
+
 }

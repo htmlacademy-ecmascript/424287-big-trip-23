@@ -12,13 +12,15 @@ export default class NewEventPresenter {
   #mode = Mode.DEFAULT;
   #onDataChange = null;
   #handleEditStart = null;
+  #handleDestroy = null;
 
-  constructor({eventListContainer, destinations,offers,onDataChange, onEditStart}) {
+  constructor({eventListContainer, destinations,offers,onDataChange, onEditStart, onDestroy}) {
     this.#destinations = destinations;
     this.#offers = offers;
     this.#eventListContainer = eventListContainer;
     this.#onDataChange = onDataChange;
     this.#handleEditStart = onEditStart;
+    this.#handleDestroy = onDestroy;
   }
 
   init() {
@@ -40,11 +42,24 @@ export default class NewEventPresenter {
 
   }
 
+  // destroy() {
+  //   remove(this.#tripEventView);
+  //   remove(this.#eventEditView);
+  //   this.#tripEventView = null;
+  //   this.#eventEditView = null;
+  // }
+
   destroy() {
-    remove(this.#tripEventView);
+    if (!this.#eventEditView) {
+      return;
+    }
+
+    this.#handleDestroy();
+
     remove(this.#eventEditView);
-    this.#tripEventView = null;
     this.#eventEditView = null;
+
+    // document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
   resetView() {
@@ -99,6 +114,8 @@ export default class NewEventPresenter {
 
   #onDelete = () => {
     this.#onDataChange(UserAction.DELETE_EVENT, UpdateType.MINOR, {...this.#event});
+    console.log(123);
+
   };
 }
 
