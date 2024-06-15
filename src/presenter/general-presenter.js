@@ -5,7 +5,7 @@ import {RenderPosition} from '../render.js';
 import { render, remove} from '../framework/render.js';
 import EventPresenter from './event-presenter.js';
 import { sortEvents,filterEvents } from '../util.js';
-import { SortType, FilterType,UserAction,UpdateType } from '../const.js';
+import { SortType, FilterType,UserAction,UpdateType, FilterTypeMessage } from '../const.js';
 import NoEventView from '../view/no-event-view.js';
 import NewEventButtonView from '../view/new-event-button-view.js';
 import NewEventPresenter from './new-event-presenter.js';
@@ -99,6 +99,11 @@ export default class GeneralPresenter {
     if(!this.#events.length) {
       this.#renderNoEvents();
     }
+    if (this.#pointModel.isUnavailableServer) {
+      this.#renderNoEvents(FilterTypeMessage.SERVER_ERROR);
+
+    }
+
   }
 
   #renderTripEvent(event) {
@@ -187,16 +192,17 @@ export default class GeneralPresenter {
     this.init();
   };
 
-  #renderNoEvents() {
+  #renderNoEvents(message) {
     this.#noEventComponent = new NoEventView({
-      filterType: this.#activeFilterType.toUpperCase()
-    });
+      filterType: this.#activeFilterType.toUpperCase()},message
+    );
     render(this.#noEventComponent,this.#eventListComponent.element);
   }
 
   #handleNewEvent = () => {
     this.#newEvent.element.disabled = true;
     this.#activeSortType = SortType.DAY;
+    this.#activeFilterType = FilterType.EVERYTHING;
     this.#newEventPresenter = new NewEventPresenter({
       destinations: this.#pointModel.destinations,
       offers: this.#pointModel.offers,
@@ -217,9 +223,9 @@ export default class GeneralPresenter {
 
   #onNewEventFormClose = () => {
     // this.#removeNewEvent();
-    // if (!this.#events.length) {
-    //   this.#removeEventsList();
-    // }
+    if (!this.#events.length) {
+      this.#renderNoEvents();
+    }
     this.#resetAllViews();
   };
 

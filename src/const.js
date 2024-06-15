@@ -35,7 +35,8 @@ export const FilterTypeMessage = {
   EVERYTHING: 'Click New Event to create your first point',
   FUTURE: 'There are no future events now',
   PRESENT: 'There are no present events now',
-  PAST: 'There are no past events now'
+  PAST: 'There are no past events now',
+  SERVER_ERROR: 'Failed to load latest route information'
 };
 
 const UpdateType = {

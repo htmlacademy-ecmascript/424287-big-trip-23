@@ -8,6 +8,7 @@ export default class PointsModel extends Observable {
   #events = [];
   #destinations = [];
   #offers = [];
+  #isUnavailableServer = false;
 
   constructor({eventsApiService}) {
     super();
@@ -40,6 +41,7 @@ export default class PointsModel extends Observable {
       this.#events = [];
       this.#destinations = [];
       this.#offers = [];
+      this.#isUnavailableServer = true;
     }
     this._notify(UpdateType.INIT);
   }
