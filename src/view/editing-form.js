@@ -23,6 +23,7 @@ const editEventFormTemplate = (event,destinations,offers,isAddingNewEvent) => {
   const resetButtonCaption = getResetButtonCaption(isAddingNewEvent, isDeleting);
   const {name, description, pictures} = currentDestination || {};
   const typeOffers = offers.find((offer) => offer.type === event.type).offers;
+  console.log(destinations)
   const eventOffers = typeOffers.filter((typeOffer) => event.offers.includes(typeOffer.id));
   return `  <li class="trip-events__item">
   <form class="event event--edit" action="#" method="post">
@@ -95,7 +96,7 @@ ${typeOffers.map((typeOffer) => ` <div class="event__available-offers">
 </div>`).join('')}
 
   </section>` : ''}
-${currentDestination ? (`<section class="event__section  event__section--destination">
+${description ? (`<section class="event__section  event__section--destination">
 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
 <p class="event__destination-description">${description}</p>
 
