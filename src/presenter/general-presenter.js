@@ -33,6 +33,8 @@ export default class GeneralPresenter {
   #newEvent = null;
   #newEventBtn = null;
   #newEventPresenter = null;
+  #onNewEventClose = null;
+
   #loadingComponent = new LoadingView();
   #isLoading = true;
   #uiBlocker = new UiBlocker({
@@ -40,13 +42,14 @@ export default class GeneralPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({tripControlsFilters,tripEvents,pointModel,newEventBtn}) {
+  constructor({tripControlsFilters,tripEvents,pointModel,newEventBtn,onNewEventClose}) {
     this.#tripControlsFilters = tripControlsFilters;
     this.#tripEvents = tripEvents;
     this.#pointModel = pointModel;
     this.#eventListComponent = new EventListView();
     this.#pointModel.addObserver(this.#handleModelEvent);
     this.#newEventBtn = newEventBtn;
+    this.#onNewEventClose = onNewEventClose;
   }
 
   init() {
@@ -193,22 +196,37 @@ export default class GeneralPresenter {
 
   #handleNewEvent = () => {
     this.#newEvent.element.disabled = true;
-
+    this.#activeSortType = SortType.DAY;
     this.#newEventPresenter = new NewEventPresenter({
       destinations: this.#pointModel.destinations,
       offers: this.#pointModel.offers,
       eventListContainer: this.#eventListComponent.element,
       onEditStart: this.#resetAllViews,
-      onDataChange: this.#onDataChange
+      onDataChange: this.#onDataChange,
+      onNewEventFormClose: this.#onNewEventFormClose,
     });
     this.#newEventPresenter.init();
     remove(this.#noEventComponent);
-
   };
 
   #renderLoading() {
     render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
     remove(this.#sortView);
+  }
+
+  #onNewEventFormClose = () => {
+    // this.#removeNewEvent();
+    // if (!this.#events.length) {
+    //   this.#removeEventsList();
+    // }
+    this.#resetAllViews();
+  };
+
+  #removeNewEvent() {
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destroy();
+      this.#newEventPresenter = null;
+    }
   }
 
 }

@@ -10,4 +10,3 @@ const pointModel = new PointsModel({eventsApiService: new EventsApiService(END_P
 pointModel.init();
 const generalPresenter = new GeneralPresenter({tripControlsFilters:tripControlsFilters,tripEvents:tripEvents,pointModel,newEventBtn:newEventBtn});
 generalPresenter.init();
-

@@ -12,15 +12,15 @@ export default class NewEventPresenter {
   #mode = Mode.DEFAULT;
   #onDataChange = null;
   #handleEditStart = null;
-  #handleDestroy = null;
+  #onNewEventFormClose = null;
 
-  constructor({eventListContainer, destinations,offers,onDataChange, onEditStart, onDestroy}) {
+  constructor({eventListContainer, destinations,offers,onDataChange, onEditStart, onNewEventFormClose}) {
     this.#destinations = destinations;
     this.#offers = offers;
     this.#eventListContainer = eventListContainer;
     this.#onDataChange = onDataChange;
     this.#handleEditStart = onEditStart;
-    this.#handleDestroy = onDestroy;
+    this.#onNewEventFormClose = onNewEventFormClose;
   }
 
   init() {
@@ -32,14 +32,17 @@ export default class NewEventPresenter {
       this.#switchToViewMode();
     },onSave:() => {
       this.#onSaveBtnClick();
-    }, onReset:() => {
-      this.#onDelete();
-    }});
+    }, onReset:this.#onFormClose});
 
 
     render(this.#eventEditView, this.#eventListContainer, RenderPosition.AFTERBEGIN);
+    document.addEventListener('keydown', this.#onDocumentKeyDown);
 
+  }
 
+  closeNewEventForm() {
+    document.removeEventListener('keydown', this.#onDocumentKeyDown);
+    this.#onNewEventFormClose();
   }
 
   destroy() {
@@ -75,12 +78,11 @@ export default class NewEventPresenter {
     this.#eventEditView.shake(resetFormState);
   }
 
-  #switchToEditMode() {
-    this.#handleEditStart();
-    replace(this.#eventEditView,this.#tripEventView);
-    document.addEventListener('keydown', this.#onDocumentKeyDown);
-    this.#mode = Mode.EDIT;
-  }
+  #onFormClose = () => {
+    this.closeNewEventForm();
+  };
+
+
 
   #switchToViewMode() {
     replace(this.#tripEventView,this.#eventEditView);
@@ -91,8 +93,7 @@ export default class NewEventPresenter {
   #onDocumentKeyDown = (evt) => {
     if(evt.key === 'Escape') {
       evt.preventDefault();
-      this.#eventEditView.reset();
-      this.#switchToViewMode();
+      this.closeNewEventForm();
     }
   };
 
@@ -100,11 +101,6 @@ export default class NewEventPresenter {
     this.#onDataChange(UserAction.UPDATE_EVENT,UpdateType.MINOR,{...this.#event});
   }
 
-  #onDelete = () => {
-    this.#onDataChange(UserAction.DELETE_EVENT, UpdateType.MINOR, {...this.#event});
-    console.log(123);
-
-  };
 }
 
 
