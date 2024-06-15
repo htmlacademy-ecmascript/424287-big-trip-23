@@ -72,10 +72,12 @@ export default class EventPresenter {
   }
 
   setDeleting() {
-    this.#eventEditView.updateElement({
-      isDisabled: true,
-      isDeleting: true,
-    });
+    if(this.#mode === Mode.EDIT) {
+      this.#eventEditView.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
   }
 
   setAborting() {

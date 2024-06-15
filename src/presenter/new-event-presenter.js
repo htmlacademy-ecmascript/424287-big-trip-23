@@ -42,25 +42,13 @@ export default class NewEventPresenter {
 
   }
 
-  // destroy() {
-  //   remove(this.#tripEventView);
-  //   remove(this.#eventEditView);
-  //   this.#tripEventView = null;
-  //   this.#eventEditView = null;
-  // }
-
   destroy() {
-    if (!this.#eventEditView) {
-      return;
-    }
-
-    this.#handleDestroy();
-
+    remove(this.#tripEventView);
     remove(this.#eventEditView);
+    this.#tripEventView = null;
     this.#eventEditView = null;
-
-    // document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
+
 
   resetView() {
     if(this.#mode === Mode.EDIT) {

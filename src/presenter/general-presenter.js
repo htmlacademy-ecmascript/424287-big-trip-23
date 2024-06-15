@@ -166,6 +166,10 @@ export default class GeneralPresenter {
   };
 
   #resetAllViews = () => {
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destroy();
+      this.#newEvent.element.disabled = false;
+    }
     this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -198,10 +202,13 @@ export default class GeneralPresenter {
       onDataChange: this.#onDataChange
     });
     this.#newEventPresenter.init();
+    remove(this.#noEventComponent);
+
   };
 
   #renderLoading() {
     render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
+    remove(this.#sortView);
   }
 
 }
