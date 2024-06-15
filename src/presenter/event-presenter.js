@@ -65,10 +65,12 @@ export default class EventPresenter {
   }
 
   setSaving() {
-    this.#eventEditView.updateElement({
-      isDisabled: true,
-      isSaving: true,
-    });
+    if(this.#mode === Mode.EDIT) {
+      this.#eventEditView.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
   }
 
   setDeleting() {
