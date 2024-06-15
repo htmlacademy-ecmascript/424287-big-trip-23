@@ -207,6 +207,7 @@ export default class GeneralPresenter {
     });
     this.#newEventPresenter.init();
     remove(this.#noEventComponent);
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
   };
 
   #renderLoading() {
