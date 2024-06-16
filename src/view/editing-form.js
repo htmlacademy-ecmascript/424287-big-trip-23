@@ -83,8 +83,8 @@ ${KIND_OF_POINTS.map((pointType) => (`<div class="event__type-item">
 
 ${typeOffers.length ? `
   <section class="event__section  event__section--offers">
-    <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-${typeOffers.map((typeOffer) => ` <div class="event__available-offers">
+    <h3 class="event__section-title  event__section-title--offers">Offers</h3><div class="event__available-offers">
+${typeOffers.map((typeOffer) => `
 <div class="event__offer-selector">
 <input class="event__offer-checkbox  visually-hidden" id="event-${typeOffer.title}-1" type="checkbox" name="event-${typeOffer.title}" data-id="${typeOffer.id}" ${eventOffers.map((offer) => offer.id).includes(typeOffer.id) ? 'checked' : ''}>
 <label class="event__offer-label" for="event-${typeOffer.title}-1">
@@ -93,7 +93,7 @@ ${typeOffers.map((typeOffer) => ` <div class="event__available-offers">
     <span class="event__offer-price">${typeOffer.price}</span>
   </label>
 </div>`).join('')}
-
+</div>
   </section>` : ''}
 ${description ? (`<section class="event__section  event__section--destination">
 <h3 class="event__section-title  event__section-title--destination">Destination</h3>

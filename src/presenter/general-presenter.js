@@ -196,9 +196,8 @@ export default class GeneralPresenter {
   }
 
   #handleNewEvent = () => {
+    this.#handleModelEvent(UpdateType.MAJOR);
     this.#newEvent.element.disabled = true;
-    this.#activeSortType = SortType.DAY;
-    this.#activeFilterType = FilterType.EVERYTHING;
     this.#newEventPresenter = new NewEventPresenter({
       destinations: this.#pointModel.destinations,
       offers: this.#pointModel.offers,
