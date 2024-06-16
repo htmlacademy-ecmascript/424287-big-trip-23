@@ -5,7 +5,7 @@ import {RenderPosition} from '../render.js';
 import { render, remove} from '../framework/render.js';
 import EventPresenter from './event-presenter.js';
 import { sortEvents,filterEvents } from '../util.js';
-import { SortType, FilterType,UserAction,UpdateType, FilterTypeMessage } from '../const.js';
+import { SortType, FilterType,UserAction,UpdateType, FilterTypeMessage,LoadingMessage } from '../const.js';
 import NoEventView from '../view/no-event-view.js';
 import NewEventButtonView from '../view/new-event-button-view.js';
 import NewEventPresenter from './new-event-presenter.js';
@@ -35,7 +35,8 @@ export default class GeneralPresenter {
   #newEventPresenter = null;
   #onNewEventClose = null;
 
-  #loadingComponent = new LoadingView();
+  #loadingComponent = new LoadingView({message:LoadingMessage.LOADIND});
+  #errComponent = null;
   #isLoading = true;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
@@ -167,9 +168,11 @@ export default class GeneralPresenter {
 
         break;
       case UpdateType.ERROR:
+        this.#isLoading = false;
         remove(this.#loadingComponent);
         remove(this.#noEventComponent);
-        this.init();
+        this.#renderErrMessage();
+
 
         break;
     }
@@ -201,6 +204,11 @@ export default class GeneralPresenter {
     render(this.#noEventComponent,this.#eventListComponent.element);
   }
 
+  #renderErrMessage() {
+    this.#errComponent = new LoadingView({message:LoadingMessage.SERVER_ERROR});
+    render(this.#errComponent,this.#eventListComponent.element);
+  }
+
   #handleNewEvent = () => {
     this.#handleModelEvent(UpdateType.MAJOR);
     this.#newEvent.element.disabled = true;
@@ -223,7 +231,7 @@ export default class GeneralPresenter {
   }
 
   #onNewEventFormClose = () => {
-    // this.#removeNewEvent();
+    this.#removeNewEvent();
     if (!this.#events.length) {
       this.#renderNoEvents();
     }

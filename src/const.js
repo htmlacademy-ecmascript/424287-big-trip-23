@@ -35,8 +35,7 @@ export const FilterTypeMessage = {
   EVERYTHING: 'Click New Event to create your first point',
   FUTURE: 'There are no future events now',
   PRESENT: 'There are no present events now',
-  PAST: 'There are no past events now',
-  SERVER_ERROR: 'Failed to load latest route information'
+  PAST: 'There are no past events now'
 };
 
 const UpdateType = {
@@ -47,6 +46,11 @@ const UpdateType = {
   ERROR: 'ERROR'
 };
 
+export const LoadingMessage = {
+  LOADIND: 'Loading...',
+  SERVER_ERROR: 'Failed to load latest route information'
+};
+
 const UserAction = {
   UPDATE_EVENT: 'UPDATE_EVENT',
   ADD_EVENT: 'ADD_EVENT',
@@ -54,6 +58,6 @@ const UserAction = {
 };
 
 const AUTHORIZATION = 'Basic hS6sfS57zcl7sa8j';
-const END_POINT = 'https://23.objects.htmlacademy.pro/big-tri';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
 export {KIND_OF_POINTS,DEFAULT_EVENT ,UpdateType,UserAction,AUTHORIZATION,END_POINT};
