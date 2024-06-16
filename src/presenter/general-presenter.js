@@ -38,6 +38,7 @@ export default class GeneralPresenter {
   #loadingComponent = new LoadingView({message:LoadingMessage.LOADIND});
   #errComponent = null;
   #isLoading = true;
+  #isError = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -90,17 +91,22 @@ export default class GeneralPresenter {
   }
 
   #renderTripEvents() {
-
     render(this.#eventListComponent,this.#tripEvents);
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
-    this.#events.forEach((event) => this.#renderTripEvent(event));
-    if(!this.#events.length) {
-      this.#renderNoEvents(FilterTypeMessage.EVERYTHING);
+
+    if (this.#isError) {
+      this.#renderErrMessage();
+      return;
     }
 
+    this.#events.forEach((event) => this.#renderTripEvent(event));
+
+    if(!this.#events.length) {
+      this.#renderNoEvents(FilterTypeMessage[this.#activeFilterType]);
+    }
   }
 
   #renderTripEvent(event) {
@@ -165,15 +171,9 @@ export default class GeneralPresenter {
         this.#isLoading = false;
         remove(this.#loadingComponent);
         this.init();
-
         break;
       case UpdateType.ERROR:
-        this.#isLoading = false;
-        remove(this.#loadingComponent);
-        remove(this.#noEventComponent);
-        this.#renderErrMessage();
-
-
+        this.#isError = true;
         break;
     }
   };
@@ -231,7 +231,7 @@ export default class GeneralPresenter {
   }
 
   #onNewEventFormClose = () => {
-    this.#removeNewEvent();
+    // this.#removeNewEvent();
     if (!this.#events.length) {
       this.#renderNoEvents();
     }
