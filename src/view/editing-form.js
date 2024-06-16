@@ -226,8 +226,8 @@ export default class EditingForm extends AbstractStatefulView {
     }
   }
 
-  reset() {
-    this.updateElement(this.#event);
+  reset(event) {
+    this.updateElement(EditingForm.parseEventToState(event, this.#destinations, this.#offers));
   }
 
   #setDatepickerStart() {

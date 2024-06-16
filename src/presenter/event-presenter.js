@@ -33,6 +33,7 @@ export default class EventPresenter {
     this.#eventEditView = new EditingForm({event,destinations:this.#destinations, offers:this.#offers, onSubmit: (newState) => {
       this.#onDataChange(UserAction.UPDATE_EVENT, UpdateType.MINOR,newState);
     }, onClick:() => {
+      this.#eventEditView.reset(this.#event);
       this.#switchToViewMode();
     },onSave:() => {
       this.#onSaveBtnClick();
@@ -115,7 +116,7 @@ export default class EventPresenter {
   #onDocumentKeyDown = (evt) => {
     if(evt.key === 'Escape') {
       evt.preventDefault();
-      this.#eventEditView.reset();
+      this.#eventEditView.reset(this.#event);
       this.#switchToViewMode();
     }
   };
