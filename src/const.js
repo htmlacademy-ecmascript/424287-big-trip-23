@@ -43,7 +43,8 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
-  INIT: 'INIT'
+  INIT: 'INIT',
+  ERROR: 'ERROR'
 };
 
 const UserAction = {
@@ -53,6 +54,6 @@ const UserAction = {
 };
 
 const AUTHORIZATION = 'Basic hS6sfS57zcl7sa8j';
-const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
+const END_POINT = 'https://23.objects.htmlacademy.pro/big-tri';
 
 export {KIND_OF_POINTS,DEFAULT_EVENT ,UpdateType,UserAction,AUTHORIZATION,END_POINT};

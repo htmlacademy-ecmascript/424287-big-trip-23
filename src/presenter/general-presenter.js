@@ -166,6 +166,12 @@ export default class GeneralPresenter {
         this.init();
 
         break;
+      case UpdateType.ERROR:
+        remove(this.#loadingComponent);
+        remove(this.#noEventComponent);
+        this.init();
+
+        break;
     }
   };
 
