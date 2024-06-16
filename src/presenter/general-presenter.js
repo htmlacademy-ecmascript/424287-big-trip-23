@@ -97,11 +97,7 @@ export default class GeneralPresenter {
     }
     this.#events.forEach((event) => this.#renderTripEvent(event));
     if(!this.#events.length) {
-      this.#renderNoEvents();
-    }
-    if (this.#pointModel.isUnavailableServer) {
-      this.#renderNoEvents(FilterTypeMessage.SERVER_ERROR);
-
+      this.#renderNoEvents(FilterTypeMessage.EVERYTHING);
     }
 
   }
