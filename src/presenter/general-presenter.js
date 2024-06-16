@@ -227,6 +227,10 @@ export default class GeneralPresenter {
   }
 
   #onNewEventFormClose = () => {
+<<<<<<< HEAD
+=======
+    // this.#removeNewEvent();
+>>>>>>> e123a5c... Корректно выводит сообщение об ошибке
     if (!this.#events.length) {
       this.#renderNoEvents();
     }
