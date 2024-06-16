@@ -61,6 +61,7 @@ export default class EventPresenter {
 
   resetView() {
     if(this.#mode === Mode.EDIT) {
+      this.#eventEditView.reset(this.#event);
       this.#switchToViewMode();
     }
   }
