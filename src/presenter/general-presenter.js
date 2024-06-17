@@ -5,17 +5,12 @@ import {RenderPosition} from '../render.js';
 import { render, remove} from '../framework/render.js';
 import EventPresenter from './event-presenter.js';
 import { sortEvents,filterEvents } from '../util.js';
-import { SortType, FilterType,UserAction,UpdateType, FilterTypeMessage,LoadingMessage } from '../const.js';
+import { SortType, FilterType,UserAction,UpdateType, FilterTypeMessage,LoadingMessage,TimeLimit } from '../const.js';
 import NoEventView from '../view/no-event-view.js';
 import NewEventButtonView from '../view/new-event-button-view.js';
 import NewEventPresenter from './new-event-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
-
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
 
 export default class GeneralPresenter {
   #tripControlsFilters = null;
@@ -109,46 +104,11 @@ export default class GeneralPresenter {
   #renderTripEvent(event) {
     const destinations = [...this.#pointModel.destinations];
     const offers = [...this.#pointModel.offers];
-
     const eventPresenter = new EventPresenter({eventListContainer: this.#eventListComponent.element, destinations,offers, onDataChange: this.#onDataChange, onEditStart:this.#resetAllViews});
-
     eventPresenter.init(event);
 
     this.#eventPresenters.set(event.id, eventPresenter);
   }
-
-  #onDataChange = async (actionType, updateType, update) => {
-    this.#uiBlocker.block();
-    switch (actionType) {
-      case UserAction.UPDATE_EVENT:
-        this.#eventPresenters.get(update.id).setSaving();
-        try {
-          await this.#pointModel.updateEvent(updateType, update);
-        } catch(err) {
-          this.#eventPresenters.get(update.id).setAborting();
-        }
-        break;
-      case UserAction.ADD_EVENT:
-        this.#newEventPresenter.setSaving();
-        try {
-          await this.#pointModel.addEvent(updateType, update);
-        } catch(err) {
-          this.#newEventPresenter.setAborting();
-        }
-        break;
-      case UserAction.DELETE_EVENT:
-        this.#eventPresenters.get(update.id).setDeleting();
-        try {
-          await this.#pointModel.deleteEvent(updateType, update);
-
-        } catch(err) {
-          this.#eventPresenters.get(update.id).setAborting();
-        }
-        break;
-
-    }
-    this.#uiBlocker.unblock();
-  };
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
@@ -225,6 +185,39 @@ export default class GeneralPresenter {
     render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
     remove(this.#sortView);
   }
+
+  #onDataChange = async (actionType, updateType, update) => {
+    this.#uiBlocker.block();
+    switch (actionType) {
+      case UserAction.UPDATE_EVENT:
+        this.#eventPresenters.get(update.id).setSaving();
+        try {
+          await this.#pointModel.updateEvent(updateType, update);
+        } catch(err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
+        break;
+      case UserAction.ADD_EVENT:
+        this.#newEventPresenter.setSaving();
+        try {
+          await this.#pointModel.addEvent(updateType, update);
+        } catch(err) {
+          this.#newEventPresenter.setAborting();
+        }
+        break;
+      case UserAction.DELETE_EVENT:
+        this.#eventPresenters.get(update.id).setDeleting();
+        try {
+          await this.#pointModel.deleteEvent(updateType, update);
+
+        } catch(err) {
+          this.#eventPresenters.get(update.id).setAborting();
+        }
+        break;
+
+    }
+    this.#uiBlocker.unblock();
+  };
 
   #onNewEventFormClose = () => {
     if (!this.#events.length) {

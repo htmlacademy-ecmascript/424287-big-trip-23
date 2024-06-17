@@ -1,7 +1,6 @@
 import { KIND_OF_POINTS } from '../const';
 import { humanizeDueTimeForForm,getPositiveNumber} from '../util.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import he from 'he';
@@ -139,6 +138,55 @@ export default class EditingForm extends AbstractStatefulView {
     return editEventFormTemplate(this._state,this.#destinations, this.#offers,this.#isAddingNewEvent);
   }
 
+  reset(event) {
+    this.updateElement(EditingForm.parseEventToState(event, this.#destinations, this.#offers));
+  }
+
+  #setDatepickerStart() {
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('[name="event-start-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        minDate: 'today',
+        'time_24hr': true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#onDateFromChangeClick,
+      },
+    );
+  }
+
+  #setDatepickerEnd() {
+    this.#datepickerEnd = flatpickr(
+      this.element.querySelector('[name="event-end-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        minDate: this._state.dateFrom,
+        'time_24hr': true,
+        defaultDate: this._state.dateTo,
+        onChange: this.#onDateToChangeClick,
+      },
+    );
+  }
+
+  _restoreHandlers() {
+    this.element.addEventListener('submit', this.#onSubmitClick);
+    if(!this.#isAddingNewEvent) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
+    }
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeClick);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onEventDestinationClick);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChangeInput);
+    const availableOffers = this.element.querySelector('.event__available-offers');
+    if(availableOffers) {
+      availableOffers.addEventListener('change',this.#onOfferClick);
+    }
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
+  }
+
   #onSubmitClick = (evt) => {
     evt.preventDefault();
     this.#onSubmit(EditingForm.parseStateToEvent(this._state));
@@ -193,22 +241,6 @@ export default class EditingForm extends AbstractStatefulView {
     this.#onReset(EditingForm.parseStateToEvent(this._state));
   };
 
-  _restoreHandlers() {
-    this.element.addEventListener('submit', this.#onSubmitClick);
-    if(!this.#isAddingNewEvent) {
-      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#onCloseBtnClick);
-    }
-    this.element.querySelector('.event__type-group').addEventListener('change', this.#onEventTypeClick);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#onEventDestinationClick);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#onPriceChangeInput);
-    const availableOffers = this.element.querySelector('.event__available-offers');
-    if(availableOffers) {
-      availableOffers.addEventListener('change',this.#onOfferClick);
-    }
-    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#onDeleteBtnClick);
-    this.#setDatepickerStart();
-    this.#setDatepickerEnd();
-  }
 
   removeElement() {
     super.removeElement();
@@ -221,38 +253,6 @@ export default class EditingForm extends AbstractStatefulView {
       this.#datepickerEnd.destroy();
       this.#datepickerEnd = null;
     }
-  }
-
-  reset(event) {
-    this.updateElement(EditingForm.parseEventToState(event, this.#destinations, this.#offers));
-  }
-
-  #setDatepickerStart() {
-    this.#datepickerStart = flatpickr(
-      this.element.querySelector('[name="event-start-time"]'),
-      {
-        dateFormat: 'd/m/y H:i',
-        enableTime: true,
-        minDate: 'today',
-        'time_24hr': true,
-        defaultDate: this._state.dateFrom,
-        onChange: this.#onDateFromChangeClick,
-      },
-    );
-  }
-
-  #setDatepickerEnd() {
-    this.#datepickerEnd = flatpickr(
-      this.element.querySelector('[name="event-end-time"]'),
-      {
-        dateFormat: 'd/m/y H:i',
-        enableTime: true,
-        minDate: this._state.dateFrom,
-        'time_24hr': true,
-        defaultDate: this._state.dateTo,
-        onChange: this.#onDateToChangeClick,
-      },
-    );
   }
 
   static parseEventToState(event) {

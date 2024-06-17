@@ -3,7 +3,6 @@ import AbstractView from '../framework/view/abstract-view';
 
 function createNoEventTemplate(filterType) {
   const noTaskTextValue = FilterTypeMessage[filterType];
-
   return `<p class="trip-events__msg">${noTaskTextValue}</p>`;
 }
 

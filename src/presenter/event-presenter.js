@@ -2,6 +2,7 @@ import WayPoint from '../view/way-point.js';
 import EditingForm from '../view/editing-form.js';
 import { remove, render, replace} from '../framework/render.js';
 import { Mode,UpdateType,UserAction } from '../const.js';
+
 export default class EventPresenter {
   #event = null;
   #destinations = [];
@@ -41,14 +42,12 @@ export default class EventPresenter {
       this.#onDelete();
     }});
 
-
     if(prevEventView === null) {
       render(this.#tripEventView, this.#eventListContainer);
       return;
     }
 
     replace(this.#tripEventView,prevEventView);
-
 
   }
 
@@ -114,6 +113,10 @@ export default class EventPresenter {
     this.#mode = Mode.DEFAULT;
   }
 
+  #onDelete = () => {
+    this.#onDataChange(UserAction.DELETE_EVENT, UpdateType.MINOR, {...this.#event});
+  };
+
   #onDocumentKeyDown = (evt) => {
     if(evt.key === 'Escape') {
       evt.preventDefault();
@@ -128,10 +131,6 @@ export default class EventPresenter {
 
   #onFavoriteBtnClick = () => {
     this.#onDataChange(UserAction.UPDATE_EVENT,UpdateType.PATCH,{...this.#event, isFavorite: !this.#event.isFavorite});
-  };
-
-  #onDelete = () => {
-    this.#onDataChange(UserAction.DELETE_EVENT, UpdateType.MINOR, {...this.#event});
   };
 
 }

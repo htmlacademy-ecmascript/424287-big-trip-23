@@ -57,7 +57,12 @@ const UserAction = {
   DELETE_EVENT: 'DELETE_EVENT',
 };
 
+const TimeLimit = {
+  LOWER_LIMIT: 350,
+  UPPER_LIMIT: 1000,
+};
+
 const AUTHORIZATION = 'Basic hS6sfS57zcl7sa8j';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
-export {KIND_OF_POINTS,DEFAULT_EVENT ,UpdateType,UserAction,AUTHORIZATION,END_POINT};
+export {KIND_OF_POINTS,DEFAULT_EVENT ,UpdateType,UserAction,AUTHORIZATION,END_POINT,TimeLimit};
