@@ -1,11 +1,16 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
-function loadingEventTemplate() {
-  return ('<p class="trip-events__msg">Loading...</p>');
-}
+const createMessageTemplate = (text) => `<p class="trip-events__msg">${text}</p>`;
 
 export default class LoadingView extends AbstractView {
+  #message = '';
+
+  constructor({ message }) {
+    super();
+    this.#message = message;
+  }
+
   get template() {
-    return loadingEventTemplate();
+    return createMessageTemplate(this.#message);
   }
 }

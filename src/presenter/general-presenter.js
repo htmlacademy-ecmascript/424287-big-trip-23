@@ -5,23 +5,17 @@ import {RenderPosition} from '../render.js';
 import { render, remove} from '../framework/render.js';
 import EventPresenter from './event-presenter.js';
 import { sortEvents,filterEvents } from '../util.js';
-import { SortType, FilterType,UserAction,UpdateType } from '../const.js';
+import { SortType, FilterType,UserAction,UpdateType, FilterTypeMessage,LoadingMessage,TimeLimit } from '../const.js';
 import NoEventView from '../view/no-event-view.js';
 import NewEventButtonView from '../view/new-event-button-view.js';
 import NewEventPresenter from './new-event-presenter.js';
 import LoadingView from '../view/loading-view.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 
-const TimeLimit = {
-  LOWER_LIMIT: 350,
-  UPPER_LIMIT: 1000,
-};
-
 export default class GeneralPresenter {
   #tripControlsFilters = null;
   #tripEvents = null;
   #pointModel = null;
-  #tripEventsView = null;
   #eventListComponent = null;
   #eventPresenters = new Map();
   #events = null;
@@ -33,23 +27,23 @@ export default class GeneralPresenter {
   #newEvent = null;
   #newEventBtn = null;
   #newEventPresenter = null;
-  #onNewEventClose = null;
 
-  #loadingComponent = new LoadingView();
+  #loadingComponent = new LoadingView({message:LoadingMessage.LOADIND});
+  #errComponent = null;
   #isLoading = true;
+  #isError = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({tripControlsFilters,tripEvents,pointModel,newEventBtn,onNewEventClose}) {
+  constructor({tripControlsFilters,tripEvents,pointModel,newEventBtn}) {
     this.#tripControlsFilters = tripControlsFilters;
     this.#tripEvents = tripEvents;
     this.#pointModel = pointModel;
     this.#eventListComponent = new EventListView();
     this.#pointModel.addObserver(this.#handleModelEvent);
     this.#newEventBtn = newEventBtn;
-    this.#onNewEventClose = onNewEventClose;
   }
 
   init() {
@@ -89,27 +83,107 @@ export default class GeneralPresenter {
   }
 
   #renderTripEvents() {
-
     render(this.#eventListComponent,this.#tripEvents);
     if (this.#isLoading) {
       this.#renderLoading();
       return;
     }
+
+    if (this.#isError) {
+      this.#renderErrMessage();
+      return;
+    }
+
     this.#events.forEach((event) => this.#renderTripEvent(event));
+
     if(!this.#events.length) {
-      this.#renderNoEvents();
+      this.#renderNoEvents(FilterTypeMessage[this.#activeFilterType]);
     }
   }
 
   #renderTripEvent(event) {
     const destinations = [...this.#pointModel.destinations];
     const offers = [...this.#pointModel.offers];
-
     const eventPresenter = new EventPresenter({eventListContainer: this.#eventListComponent.element, destinations,offers, onDataChange: this.#onDataChange, onEditStart:this.#resetAllViews});
-
     eventPresenter.init(event);
 
     this.#eventPresenters.set(event.id, eventPresenter);
+  }
+
+  #handleModelEvent = (updateType, data) => {
+    switch (updateType) {
+      case UpdateType.PATCH:
+        this.#eventPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.init();
+        break;
+      case UpdateType.MAJOR:
+        this.#activeSortType = SortType.DAY;
+        this.#activeFilterType = FilterType.EVERYTHING;
+        this.init();
+        break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.init();
+        break;
+      case UpdateType.ERROR:
+        this.#isError = true;
+        break;
+    }
+  };
+
+  #resetAllViews = () => {
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destroy();
+      this.#newEvent.element.disabled = false;
+    }
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleSortChange = (nextSortType) => {
+    this.#activeSortType = nextSortType;
+    this.init();
+  };
+
+  #handleFilterChange = (nextFilterType) => {
+    this.#activeFilterType = nextFilterType;
+    this.#activeSortType = SortType.DAY;
+    this.init();
+  };
+
+  #renderNoEvents(message) {
+    this.#noEventComponent = new NoEventView({
+      filterType: this.#activeFilterType.toUpperCase()},message
+    );
+    render(this.#noEventComponent,this.#eventListComponent.element);
+  }
+
+  #renderErrMessage() {
+    this.#errComponent = new LoadingView({message:LoadingMessage.SERVER_ERROR});
+    render(this.#errComponent,this.#eventListComponent.element);
+  }
+
+  #handleNewEvent = () => {
+    this.#handleModelEvent(UpdateType.MAJOR);
+    this.#newEvent.element.disabled = true;
+    this.#newEventPresenter = new NewEventPresenter({
+      destinations: this.#pointModel.destinations,
+      offers: this.#pointModel.offers,
+      eventListContainer: this.#eventListComponent.element,
+      onEditStart: this.#resetAllViews,
+      onDataChange: this.#onDataChange,
+      onNewEventFormClose: this.#onNewEventFormClose,
+    });
+    this.#newEventPresenter.init();
+    remove(this.#noEventComponent);
+    this.#eventPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #renderLoading() {
+    render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
+    remove(this.#sortView);
   }
 
   #onDataChange = async (actionType, updateType, update) => {
@@ -117,7 +191,6 @@ export default class GeneralPresenter {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this.#eventPresenters.get(update.id).setSaving();
-
         try {
           await this.#pointModel.updateEvent(updateType, update);
         } catch(err) {
@@ -146,88 +219,12 @@ export default class GeneralPresenter {
     this.#uiBlocker.unblock();
   };
 
-  #handleModelEvent = (updateType, data) => {
-    switch (updateType) {
-      case UpdateType.PATCH:
-        this.#eventPresenters.get(data.id).init(data);
-        break;
-      case UpdateType.MINOR:
-        this.init();
-        break;
-      case UpdateType.MAJOR:
-        this.#activeSortType = SortType.DAY;
-        this.#activeFilterType = FilterType.EVERYTHING;
-        this.init();
-        break;
-      case UpdateType.INIT:
-        this.#isLoading = false;
-        remove(this.#loadingComponent);
-        this.init();
-
-        break;
-    }
-  };
-
-  #resetAllViews = () => {
-    if (this.#newEventPresenter) {
-      this.#newEventPresenter.destroy();
-      this.#newEvent.element.disabled = false;
-    }
-    this.#eventPresenters.forEach((presenter) => presenter.resetView());
-  };
-
-  #handleSortChange = (nextSortType) => {
-    this.#activeSortType = nextSortType;
-    this.init();
-  };
-
-  #handleFilterChange = (nextFilterType) => {
-    this.#activeFilterType = nextFilterType;
-    this.#activeSortType = SortType.DAY;
-    this.init();
-  };
-
-  #renderNoEvents() {
-    this.#noEventComponent = new NoEventView({
-      filterType: this.#activeFilterType.toUpperCase()
-    });
-    render(this.#noEventComponent,this.#eventListComponent.element);
-  }
-
-  #handleNewEvent = () => {
-    this.#newEvent.element.disabled = true;
-    this.#activeSortType = SortType.DAY;
-    this.#newEventPresenter = new NewEventPresenter({
-      destinations: this.#pointModel.destinations,
-      offers: this.#pointModel.offers,
-      eventListContainer: this.#eventListComponent.element,
-      onEditStart: this.#resetAllViews,
-      onDataChange: this.#onDataChange,
-      onNewEventFormClose: this.#onNewEventFormClose,
-    });
-    this.#newEventPresenter.init();
-    remove(this.#noEventComponent);
-  };
-
-  #renderLoading() {
-    render(this.#loadingComponent, this.#eventListComponent.element, RenderPosition.AFTERBEGIN);
-    remove(this.#sortView);
-  }
-
   #onNewEventFormClose = () => {
-    // this.#removeNewEvent();
-    // if (!this.#events.length) {
-    //   this.#removeEventsList();
-    // }
+    if (!this.#events.length) {
+      this.#renderNoEvents();
+    }
     this.#resetAllViews();
   };
-
-  #removeNewEvent() {
-    if (this.#newEventPresenter) {
-      this.#newEventPresenter.destroy();
-      this.#newEventPresenter = null;
-    }
-  }
 
 }
 

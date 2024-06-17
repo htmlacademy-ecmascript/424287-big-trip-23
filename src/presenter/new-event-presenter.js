@@ -34,10 +34,8 @@ export default class NewEventPresenter {
       this.#onSaveBtnClick();
     }, onReset:this.#onFormClose});
 
-
     render(this.#eventEditView, this.#eventListContainer, RenderPosition.AFTERBEGIN);
     document.addEventListener('keydown', this.#onDocumentKeyDown);
-
   }
 
   closeNewEventForm() {
@@ -51,7 +49,6 @@ export default class NewEventPresenter {
     this.#tripEventView = null;
     this.#eventEditView = null;
   }
-
 
   resetView() {
     if(this.#mode === Mode.EDIT) {
@@ -78,16 +75,16 @@ export default class NewEventPresenter {
     this.#eventEditView.shake(resetFormState);
   }
 
-  #onFormClose = () => {
-    this.closeNewEventForm();
-  };
-
 
   #switchToViewMode() {
     replace(this.#tripEventView,this.#eventEditView);
     document.removeEventListener('keydown', this.#onDocumentKeyDown);
     this.#mode = Mode.DEFAULT;
   }
+
+  #onFormClose = () => {
+    this.closeNewEventForm();
+  };
 
   #onDocumentKeyDown = (evt) => {
     if(evt.key === 'Escape') {

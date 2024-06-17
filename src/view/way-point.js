@@ -49,6 +49,7 @@ const createWayPointTemplate = (event,destinations,offers) => {
               </div>
 </li>`;
 };
+
 export default class WayPoint extends AbstractView {
   #event = null;
   #destinations = null;
@@ -67,6 +68,10 @@ export default class WayPoint extends AbstractView {
     this.element.querySelector('.event__favorite-btn').addEventListener('click',this.#onFavoriteBtnClick);
   }
 
+  get template() {
+    return createWayPointTemplate(this.#event,this.#destinations, this.#offers);
+  }
+
   #onEditBtnClick = (evt) => {
     evt.preventDefault();
     this.#onClick();
@@ -76,9 +81,5 @@ export default class WayPoint extends AbstractView {
     evt.preventDefault();
     this.#onBtnClick();
   };
-
-  get template() {
-    return createWayPointTemplate(this.#event,this.#destinations, this.#offers);
-  }
 
 }

@@ -19,7 +19,6 @@ export default class SortView extends AbstractView {
     super();
     this.#currentSortType = currentSortType || SortType.DAY;
     this.#handleSortChange = onSortChange;
-
     this.element.addEventListener('change', this.#onSortChange);
   }
 
