@@ -111,7 +111,6 @@ ${pictures.length ?
 };
 
 export default class EditingForm extends AbstractStatefulView {
-  #event = null;
   #destinations = null;
   #offers = null;
   #onClick = null;
@@ -140,6 +139,19 @@ export default class EditingForm extends AbstractStatefulView {
 
   reset(event) {
     this.updateElement(EditingForm.parseEventToState(event, this.#destinations, this.#offers));
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+    }
+    if (this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
+    }
   }
 
   #setDatepickerStart() {
@@ -240,20 +252,6 @@ export default class EditingForm extends AbstractStatefulView {
     evt.preventDefault();
     this.#onReset(EditingForm.parseStateToEvent(this._state));
   };
-
-
-  removeElement() {
-    super.removeElement();
-
-    if (this.#datepickerStart) {
-      this.#datepickerStart.destroy();
-      this.#datepickerStart = null;
-    }
-    if (this.#datepickerEnd) {
-      this.#datepickerEnd.destroy();
-      this.#datepickerEnd = null;
-    }
-  }
 
   static parseEventToState(event) {
     return {...event};
