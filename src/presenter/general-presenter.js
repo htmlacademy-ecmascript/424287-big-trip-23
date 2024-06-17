@@ -21,7 +21,6 @@ export default class GeneralPresenter {
   #tripControlsFilters = null;
   #tripEvents = null;
   #pointModel = null;
-  #tripEventsView = null;
   #eventListComponent = null;
   #eventPresenters = new Map();
   #events = null;
@@ -33,7 +32,6 @@ export default class GeneralPresenter {
   #newEvent = null;
   #newEventBtn = null;
   #newEventPresenter = null;
-  #onNewEventClose = null;
 
   #loadingComponent = new LoadingView({message:LoadingMessage.LOADIND});
   #errComponent = null;
@@ -44,14 +42,13 @@ export default class GeneralPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({tripControlsFilters,tripEvents,pointModel,newEventBtn,onNewEventClose}) {
+  constructor({tripControlsFilters,tripEvents,pointModel,newEventBtn}) {
     this.#tripControlsFilters = tripControlsFilters;
     this.#tripEvents = tripEvents;
     this.#pointModel = pointModel;
     this.#eventListComponent = new EventListView();
     this.#pointModel.addObserver(this.#handleModelEvent);
     this.#newEventBtn = newEventBtn;
-    this.#onNewEventClose = onNewEventClose;
   }
 
   init() {
@@ -125,7 +122,6 @@ export default class GeneralPresenter {
     switch (actionType) {
       case UserAction.UPDATE_EVENT:
         this.#eventPresenters.get(update.id).setSaving();
-
         try {
           await this.#pointModel.updateEvent(updateType, update);
         } catch(err) {
@@ -231,19 +227,11 @@ export default class GeneralPresenter {
   }
 
   #onNewEventFormClose = () => {
-    // this.#removeNewEvent();
     if (!this.#events.length) {
       this.#renderNoEvents();
     }
     this.#resetAllViews();
   };
-
-  #removeNewEvent() {
-    if (this.#newEventPresenter) {
-      this.#newEventPresenter.destroy();
-      this.#newEventPresenter = null;
-    }
-  }
 
 }
 

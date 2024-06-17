@@ -166,15 +166,12 @@ export default class EditingForm extends AbstractStatefulView {
   };
 
   #onDateFromChangeClick = ([userDate]) => {
-    this.updateElement({
-      dateFrom: userDate,
-    });
+    this._setState({ dateFrom: userDate });
+    this.#setDatepickerEnd();
   };
 
   #onDateToChangeClick = ([userDate]) => {
-    this.updateElement({
-      dateTo: userDate,
-    });
+    this._setState({ dateTo: userDate });
   };
 
   #onPriceChangeInput = (evt) => {
