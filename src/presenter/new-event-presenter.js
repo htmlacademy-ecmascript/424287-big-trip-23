@@ -11,15 +11,13 @@ export default class NewEventPresenter {
   #eventEditView = null;
   #mode = Mode.DEFAULT;
   #onDataChange = null;
-  #handleEditStart = null;
   #onNewEventFormClose = null;
 
-  constructor({eventListContainer, destinations,offers,onDataChange, onEditStart, onNewEventFormClose}) {
+  constructor({eventListContainer, destinations,offers,onDataChange, onNewEventFormClose}) {
     this.#destinations = destinations;
     this.#offers = offers;
     this.#eventListContainer = eventListContainer;
     this.#onDataChange = onDataChange;
-    this.#handleEditStart = onEditStart;
     this.#onNewEventFormClose = onNewEventFormClose;
   }
 

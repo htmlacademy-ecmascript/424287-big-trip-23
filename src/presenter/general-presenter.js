@@ -28,8 +28,8 @@ export default class GeneralPresenter {
   #newEventBtn = null;
   #newEventPresenter = null;
 
-  #loadingComponent = new LoadingView({message:LoadingMessage.LOADIND});
-  #errComponent = null;
+  #loadingComponent = new LoadingView({message:LoadingMessage.LOADING});
+  #errorComponent = null;
   #isLoading = true;
   #isError = false;
   #uiBlocker = new UiBlocker({
@@ -90,7 +90,7 @@ export default class GeneralPresenter {
     }
 
     if (this.#isError) {
-      this.#renderErrMessage();
+      this.#renderErrorMessage();
       return;
     }
 
@@ -153,16 +153,15 @@ export default class GeneralPresenter {
     this.init();
   };
 
-  #renderNoEvents(message) {
+  #renderNoEvents() {
     this.#noEventComponent = new NoEventView({
-      filterType: this.#activeFilterType.toUpperCase()},message
-    );
+      filterType: this.#activeFilterType.toUpperCase()});
     render(this.#noEventComponent,this.#eventListComponent.element);
   }
 
-  #renderErrMessage() {
-    this.#errComponent = new LoadingView({message:LoadingMessage.SERVER_ERROR});
-    render(this.#errComponent,this.#eventListComponent.element);
+  #renderErrorMessage() {
+    this.#errorComponent = new LoadingView({message:LoadingMessage.SERVER_ERROR});
+    render(this.#errorComponent,this.#eventListComponent.element);
   }
 
   #handleNewEvent = () => {

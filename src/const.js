@@ -9,13 +9,13 @@ const DEFAULT_EVENT = {
   offers: []
 };
 
-export const Mode = {
+const Mode = {
   DEFAULT: 'DEFAULT',
   EDIT: 'EDIT'
 };
 
 
-export const SortType = {
+const SortType = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
@@ -24,14 +24,14 @@ export const SortType = {
 };
 
 
-export const FilterType = {
+const FilterType = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
   PRESENT: 'present',
   PAST: 'past'
 };
 
-export const FilterTypeMessage = {
+const FilterTypeMessage = {
   EVERYTHING: 'Click New Event to create your first point',
   FUTURE: 'There are no future events now',
   PRESENT: 'There are no present events now',
@@ -46,8 +46,8 @@ const UpdateType = {
   ERROR: 'ERROR'
 };
 
-export const LoadingMessage = {
-  LOADIND: 'Loading...',
+const LoadingMessage = {
+  LOADING: 'Loading...',
   SERVER_ERROR: 'Failed to load latest route information'
 };
 
@@ -65,4 +65,4 @@ const TimeLimit = {
 const AUTHORIZATION = 'Basic hS6sfS57zcl7sa8j';
 const END_POINT = 'https://23.objects.htmlacademy.pro/big-trip';
 
-export {KIND_OF_POINTS,DEFAULT_EVENT ,UpdateType,UserAction,AUTHORIZATION,END_POINT,TimeLimit};
+export {KIND_OF_POINTS,DEFAULT_EVENT ,UpdateType,UserAction,AUTHORIZATION,END_POINT,TimeLimit, Mode,SortType,FilterType,FilterTypeMessage,LoadingMessage};

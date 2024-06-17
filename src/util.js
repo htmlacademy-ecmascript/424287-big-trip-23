@@ -1,30 +1,34 @@
 import dayjs from 'dayjs';
 import { SortType, FilterType } from './const';
 
-export const DateFormat = {
+const DateFormat = {
   DAY_FORMAT: 'MMM D',
   TIME_FORMAT: 'HH:mm',
   MACHINE_FORMAT: 'YYYY-MM-DD',
   FORM_FORMAT: 'DD/MM/YY HH:mm'
 } ;
 
-const getRandomArrayElement = (items) => items[Math.floor(Math.random() * items.length)];
 const humanizeDueDate = (dueDate) => dueDate ? dayjs(dueDate).format(DateFormat.DAY_FORMAT) : '';
 const humanizeDueTime = (dueDate) => dueDate ? dayjs(dueDate).format(DateFormat.TIME_FORMAT) : '';
 const machineDueFormat = (dueDate) => dueDate ? dayjs(dueDate).format(DateFormat.MACHINE_FORMAT) : '';
 const humanizeDueTimeForForm = (dueDate) => dueDate ? dayjs(dueDate).format(DateFormat.FORM_FORMAT) : '';
 
-const updateItem = (items, update) => items.map((item) => item.id === update.id ? update : item);
 const getTimeDifference = ({dateFrom,dateTo}) => (new Date(dateTo)).getTime() - (new Date(dateFrom)).getTime();
 const getTimeDuration = (dateFrom, dateTo) => {
-  const minutes = String(dayjs(dateTo).diff(dayjs(dateFrom), 'minutes') % 60).padStart(2, '0');
-  const hours = String(dayjs(dateTo).diff(dayjs(dateFrom), 'hours') % 24).padStart(2, '0');
-  const days = String(dayjs(dateTo).diff(dayjs(dateFrom), 'days')).padStart(2, '0');
+  let minutes = dayjs(dateTo).diff(dayjs(dateFrom), 'minutes') % 60;
+  let hours = dayjs(dateTo).diff(dayjs(dateFrom), 'hours') % 24;
+  let days = dayjs(dateTo).diff(dayjs(dateFrom), 'days');
   if (days === 0 && hours === 0){
+    minutes = String(minutes).padStart(2, '0');
     return `${minutes}M`;
   } else if (days === 0 && hours !== 0) {
+    hours = String(hours).padStart(2, '0');
+    minutes = String(minutes).padStart(2, '0');
     return `${hours}H ${minutes}M`;
   }
+  days = String(days).padStart(2, '0');
+  hours = String(hours).padStart(2, '0');
+  minutes = String(minutes).padStart(2, '0');
   return `${days}D ${hours}H ${minutes}M`;
 };
 
@@ -49,12 +53,12 @@ const filter = {
 
 const filterEvents = (events, filterType) => filter[filterType](events);
 
-const getPositiveNumber = (string) => {
-  if (!string) {
+const getPositiveNumber = (item) => {
+  if (!item) {
     return null;
   }
 
-  const valueInput = parseInt(string, 10);
+  const valueInput = parseInt(item, 10);
   if (isNaN(valueInput) || (valueInput <= 0)) {
     return null;
   }
@@ -62,7 +66,4 @@ const getPositiveNumber = (string) => {
   return valueInput;
 };
 
-const addItem = (items,item) => Array.from(new Set([...items,item]));
-const removeItem = (items,item) => items.filter((el) => el !== item);
-
-export {getRandomArrayElement,humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,updateItem,sortEvents,getTimeDuration,filterEvents,getPositiveNumber, addItem,removeItem};
+export {humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,sortEvents,getTimeDuration,filterEvents,getPositiveNumber,DateFormat};

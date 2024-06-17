@@ -54,8 +54,9 @@ export default class EventPresenter {
   destroy() {
     remove(this.#tripEventView);
     remove(this.#eventEditView);
-    this.#tripEventView = null;
-    this.#eventEditView = null;
+    // this.#tripEventView = null;
+    // this.#eventEditView = null;
+    document.removeEventListener('keydown', this.#onDocumentKeyDown);
   }
 
   resetView() {
