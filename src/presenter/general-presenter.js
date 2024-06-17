@@ -227,20 +227,11 @@ export default class GeneralPresenter {
   }
 
   #onNewEventFormClose = () => {
-    // this.#removeNewEvent();
     if (!this.#events.length) {
       this.#renderNoEvents();
     }
     this.#resetAllViews();
   };
-
-
-  #removeNewEvent() {
-    if (this.#newEventPresenter) {
-      this.#newEventPresenter.destroy();
-      this.#newEventPresenter = null;
-    }
-  }
 
 }
 
