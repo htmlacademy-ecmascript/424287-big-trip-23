@@ -66,4 +66,6 @@ const getPositiveNumber = (item) => {
   return valueInput;
 };
 
-export {humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,sortEvents,getTimeDuration,filterEvents,getPositiveNumber,DateFormat};
+const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+
+export {humanizeDueDate,humanizeDueTime, machineDueFormat,humanizeDueTimeForForm,sortEvents,getTimeDuration,filterEvents,getPositiveNumber,DateFormat,capitalizeFirstLetter};
