@@ -77,8 +77,8 @@ export default class NewEventPresenter {
 
 
   #switchToViewMode() {
-    replace(this.#tripEventView,this.#eventEditView);
     document.removeEventListener('keydown', this.#onDocumentKeyDown);
+    replace(this.#tripEventView,this.#eventEditView);
     this.#mode = Mode.DEFAULT;
   }
 

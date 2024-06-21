@@ -220,9 +220,11 @@ export default class EditingForm extends AbstractStatefulView {
   #onEventDestinationClick = (evt) => {
     evt.preventDefault();
     const destination = this.#destinations.find((element) => element.name === evt.target.value);
-    this.updateElement({
-      destination: destination.id
-    });
+    if(destination) {
+      this.updateElement({
+        destination: destination.id
+      });
+    }
   };
 
   #onDateFromChangeClick = ([userDate]) => {

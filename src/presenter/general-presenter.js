@@ -58,6 +58,9 @@ export default class GeneralPresenter {
   #renderNewEventBtn() {
     this.#newEvent = new NewEventButtonView({onClick:this.#handleNewEvent});
     render(this.#newEvent, this.#newEventBtn,RenderPosition.BEFOREEND);
+    if(this.#isLoading || this.#isError) {
+      this.#newEvent.element.disabled = true;
+    }
   }
 
   #clearTripEvents() {
@@ -90,6 +93,7 @@ export default class GeneralPresenter {
     }
 
     if (this.#isError) {
+      remove(this.#sortView);
       this.#renderErrorMessage();
       return;
     }
@@ -97,6 +101,7 @@ export default class GeneralPresenter {
     this.#events.forEach((event) => this.#renderTripEvent(event));
 
     if(!this.#events.length) {
+      remove(this.#sortView);
       this.#renderNoEvents(FilterTypeMessage[this.#activeFilterType]);
     }
   }
