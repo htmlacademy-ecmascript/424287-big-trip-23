@@ -256,10 +256,14 @@ export default class EditingForm extends AbstractStatefulView {
   };
 
   static parseEventToState(event) {
-    return {...event};
+    return {...event, isDeleting: false, isSaving: false, isDisabled: false};
   }
 
   static parseStateToEvent(state) {
-    return {...state};
+    const event = {...state};
+    delete event.isDisabled;
+    delete event.isSaving;
+    delete event.isDeleting;
+    return event;
   }
 }

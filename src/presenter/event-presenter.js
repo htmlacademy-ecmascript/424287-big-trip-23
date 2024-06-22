@@ -89,6 +89,10 @@ export default class EventPresenter {
     }
 
     const resetFormState = () => {
+      if (this.#mode !== Mode.EDIT) {
+        return;
+      }
+
       this.#eventEditView.updateElement({
         isDisabled: false,
         isSaving: false,

@@ -75,6 +75,9 @@ export default class GeneralPresenter {
     if (this.#noEventComponent) {
       remove(this.#noEventComponent);
     }
+    if (this.#newEventPresenter) {
+      this.#newEventPresenter.destroy();
+    }
 
   }
 
