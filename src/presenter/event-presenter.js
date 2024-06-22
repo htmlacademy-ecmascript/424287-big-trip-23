@@ -54,8 +54,6 @@ export default class EventPresenter {
   destroy() {
     remove(this.#tripEventView);
     remove(this.#eventEditView);
-    // this.#tripEventView = null;
-    // this.#eventEditView = null;
     document.removeEventListener('keydown', this.#onDocumentKeyDown);
   }
 
@@ -91,6 +89,10 @@ export default class EventPresenter {
     }
 
     const resetFormState = () => {
+      if (this.#mode !== Mode.EDIT) {
+        return;
+      }
+
       this.#eventEditView.updateElement({
         isDisabled: false,
         isSaving: false,

@@ -1,5 +1,5 @@
 import { KIND_OF_POINTS } from '../const';
-import { humanizeDueTimeForForm,getPositiveNumber} from '../util.js';
+import { humanizeDueTimeForForm,getPositiveNumber,capitalizeFirstLetter} from '../util.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -38,7 +38,7 @@ const editEventFormTemplate = (event,destinations,offers,isAddingNewEvent) => {
         <legend class="visually-hidden">Event type</legend>
 ${KIND_OF_POINTS.map((pointType) => (`<div class="event__type-item">
           <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}" ${pointType === type ? 'checked' : ''}>
-          <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${pointType}</label>
+          <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1">${capitalizeFirstLetter(pointType)}</label>
         </div>`
   )).join('')}
 
@@ -160,7 +160,7 @@ export default class EditingForm extends AbstractStatefulView {
       {
         dateFormat: 'd/m/y H:i',
         enableTime: true,
-        minDate: 'today',
+        maxDate: this._state.dateTo,
         'time_24hr': true,
         defaultDate: this._state.dateFrom,
         onChange: this.#onDateFromChangeClick,
@@ -220,9 +220,11 @@ export default class EditingForm extends AbstractStatefulView {
   #onEventDestinationClick = (evt) => {
     evt.preventDefault();
     const destination = this.#destinations.find((element) => element.name === evt.target.value);
-    this.updateElement({
-      destination: destination.id
-    });
+    if(destination) {
+      this.updateElement({
+        destination: destination.id
+      });
+    }
   };
 
   #onDateFromChangeClick = ([userDate]) => {
@@ -254,10 +256,14 @@ export default class EditingForm extends AbstractStatefulView {
   };
 
   static parseEventToState(event) {
-    return {...event};
+    return {...event, isDeleting: false, isSaving: false, isDisabled: false};
   }
 
   static parseStateToEvent(state) {
-    return {...state};
+    const event = {...state};
+    delete event.isDisabled;
+    delete event.isSaving;
+    delete event.isDeleting;
+    return event;
   }
 }
