@@ -234,6 +234,7 @@ export default class EditingForm extends AbstractStatefulView {
 
   #onDateToChangeClick = ([userDate]) => {
     this._setState({ dateTo: userDate });
+    this.#setDatepickerStart();
   };
 
   #onPriceChangeInput = (evt) => {
